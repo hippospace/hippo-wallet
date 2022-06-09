@@ -1,0 +1,36 @@
+.steps {
+  flex-direction: row !important;
+  :global {
+    .ant-steps-item-finish.ant-steps-item,
+    .ant-steps-item-active.ant-steps-item {
+      .ant-steps-item-container {
+        .ant-steps-item-icon {
+          .indicator {
+            @apply bg-grey-900;
+          }
+        }
+      }
+    }
+    .ant-steps-item {
+      @apply max-w-[70px];
+      .ant-steps-item-container {
+        @apply flex justify-center items-center h-full;
+
+        .ant-steps-item-icon {
+          @apply mt-0 ml-0;
+          .indicator {
+            @apply bg-grey-500;
+          }
+        }
+        .ant-steps-item-tail,
+        ant-steps-item-content {
+          @apply hidden;
+        }
+      }
+    }
+
+    .ant-steps-item-process .ant-steps-item-icon {
+      top: 1px !important;
+    }
+  }
+}
