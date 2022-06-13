@@ -1,15 +1,19 @@
-import { AptosAccount, AptosAccountObject } from 'aptos';
+import { AptosAccount } from 'aptos';
 
 export type AptosAccountState = AptosAccount | undefined;
 
-export interface ActiveAptosWallet {
+export interface AptosWalletAccount {
   walletName: string;
-  aptosAccount: AptosAccountState;
+  address?: string;
+  aptosAccount?: AptosAccountState;
 }
 
-export type AptosWalletObject = {
-  walletName: string;
-  aptosAccountObj: AptosAccountObject;
+export type WalletNameObject = Record<number, { walletName: string }>;
+
+export type AptosImportedWalletObject = {
+  // name: string;
+  ciphertext: string;
+  nonce: string;
 };
 
 export const MessageMethod = Object.freeze({

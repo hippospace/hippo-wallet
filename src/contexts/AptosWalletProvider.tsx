@@ -1,40 +1,37 @@
-import { createContext, FC, ReactNode, useCallback, useEffect, useState } from 'react';
-import { ActiveAptosWallet, AptosWalletObject } from 'types/aptos';
-import { Buffer } from 'buffer';
+import { createContext, FC, ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import {
-  CONNECT_PASSWORD,
-  ENCRYPTED_WALLET_LIST,
-  // NODE_URL,
-  WALLET_STATE_NETWORK_LOCAL_STORAGE_KEY
-} from 'config/aptosConstants';
+  AptosAccountState,
+  AptosImportedWalletObject,
+  AptosWalletAccount,
+  WalletNameObject
+} from 'types/aptos';
+import { WALLET_STATE_NETWORK_LOCAL_STORAGE_KEY } from 'config/aptosConstants';
 import {
   AptosNetwork,
-  getAptosAccountState,
-  getEncryptedLocalState,
-  getLocalStorageNetworkState
+  createNewAccount,
+  getAptosWalletList,
+  getLocalStorageNetworkState,
+  getPrivateKeyImports,
+  setWalletNameList,
+  storePrivateKeyImports
 } from 'utils/aptosUtils';
-import CryptoJS from 'crypto-js';
-// import { hippoWalletClient } from 'config/hippoWalletClient';
-// import { HippoWalletClient } from '@manahippo/hippo-sdk';
-import { useUnlockedMnemonicAndSeed } from 'utils/wallet-seed';
-import { getAccountFromSeed } from 'config/Wallet/walletProvider/localStorage';
-// import { Wallet } from 'config/Wallet';
-// import { AptosAccount } from 'aptos';
+import { logoutAccount, useUnlockedMnemonicAndSeed } from 'utils/wallet-seed';
+import nacl from 'tweetnacl';
+import bs58 from 'bs58';
+import { AptosAccount } from 'aptos';
+import { faucetClient } from 'config/aptosClient';
 
 interface AptosWalletContextType {
-  activeWallet?: ActiveAptosWallet;
+  activeWallet?: AptosWalletAccount;
   aptosNetwork: AptosNetwork | null;
   disconnect: () => void;
+  aptosWalletAccounts: AptosWalletAccount[];
   updateNetworkState: (network: AptosNetwork) => void;
-  initialized: boolean;
-  storeEncryptedWallet: (props: StoreWalletStateProp) => void;
-  walletList: AptosWalletObject[];
-  open: boolean;
-  openModal: () => void;
-  closeModal: () => void;
-  // connectAccount: (password: string, wallet?: string) => void;
-  // setActiveAptosWallet: (walletName?: string) => void;
-  // hippoWallet?: HippoWalletClient;
+  setWalletList: React.Dispatch<React.SetStateAction<WalletNameObject>>;
+  walletList: Record<string, AptosImportedWalletObject>;
+  addAccount: (walletName: string, importedAccount?: AptosAccount) => void;
+  updateAccountInfo: (address: string, walletName: string) => void;
+  setActiveAptosWallet: (address?: string) => void;
 }
 
 interface TProviderProps {
@@ -43,86 +40,141 @@ interface TProviderProps {
 
 const AptosWalletContext = createContext<AptosWalletContextType>({} as AptosWalletContextType);
 
-interface StoreWalletStateProp {
-  updatedWalletList: AptosWalletObject[];
-  password?: string;
-}
-
 const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
-  const [open, setOpen] = useState(false);
-  const [initialized, setInitialized] = useState(() => !!getEncryptedLocalState());
-  const [walletList, setWalletList] = useState<AptosWalletObject[]>([]);
-  const [activeWallet, setActiveWallet] = useState<ActiveAptosWallet | undefined>(undefined);
+  const [privateKeyImports, setPrivateKeyImports] =
+    useState<Record<string, AptosImportedWalletObject>>(getPrivateKeyImports);
+  const [walletList, setWalletList] = useState<WalletNameObject>(getAptosWalletList);
+  const [activeWallet, setActiveWallet] = useState<AptosWalletAccount | undefined>(undefined);
   const [aptosNetwork, setAptosNetwork] = useState<AptosNetwork | null>(() =>
     getLocalStorageNetworkState()
   );
-  const savedPassword = window.localStorage.getItem(CONNECT_PASSWORD);
   const {
-    mnemonic: { seed, derivationPath }
+    mnemonic: { seed, derivationPath, importsEncryptionKey }
   } = useUnlockedMnemonicAndSeed();
-  // useEffect(() => {
-  //   if (walletList && walletList.length) {
-  //     const aptosWalletState = getAptosAccountState(walletList[walletList.length - 1]);
-  //     setActiveWallet(aptosWalletState);
-  //   }
-  // }, [walletList]);
-  const loginAccount = useCallback(async () => {
-    if (seed && derivationPath) {
-      console.log('MEEMEM>> loing');
-      const account = getAccountFromSeed(Buffer.from(seed, 'hex'), 0, derivationPath);
-      const aptosWalletState = { walletName: 'wallet1', aptosAccount: account };
-      setActiveWallet(aptosWalletState);
+
+  const { aptosWalletAccounts }: { aptosWalletAccounts: AptosWalletAccount[] } = useMemo(() => {
+    if (!seed || !derivationPath) {
+      return { aptosWalletAccounts: [{} as AptosWalletAccount] };
     }
-  }, [seed, derivationPath]);
 
-  console.log('active walet', activeWallet);
+    const importedAccounts = Object.keys(privateKeyImports).map((address, idx) => {
+      const { ciphertext, nonce } = privateKeyImports[address];
+      let aptosAccount = {} as AptosAccount;
+      if (importsEncryptionKey) {
+        const privateKey = nacl.secretbox.open(
+          bs58.decode(ciphertext),
+          bs58.decode(nonce),
+          importsEncryptionKey
+        );
+        if (privateKey) {
+          aptosAccount = new AptosAccount(privateKey);
+        }
+      }
+      const wallet = walletList[idx];
+      return {
+        address: address,
+        walletName: wallet.walletName,
+        aptosAccount
+      };
+    });
+    return { aptosWalletAccounts: [...importedAccounts] };
+  }, [seed, derivationPath, privateKeyImports, importsEncryptionKey, walletList]);
 
-  useEffect(() => {
-    loginAccount();
-  }, [seed, derivationPath]);
+  // Set the current selected Aptos wallet
+  const setActiveAptosWallet = useCallback(
+    async (address?: string) => {
+      if (!aptosWalletAccounts || !aptosWalletAccounts.length)
+        throw new Error('Please login first');
+      let selectedWallet: AptosWalletAccount | undefined = aptosWalletAccounts[0];
+      if (address) {
+        selectedWallet = aptosWalletAccounts.find((wallet) => wallet.address === address);
+      }
+      if (!selectedWallet) throw new Error('Wallet not found');
+      setActiveWallet(selectedWallet);
+    },
+    [setActiveWallet, aptosWalletAccounts]
+  );
 
-  const connectAccount = useCallback((password: string) => {
-    if (!password) throw new Error('password is missing');
-    const encryptedWalletList = getEncryptedLocalState();
-    if (!encryptedWalletList) throw new Error('wallet is not yet initialized');
-    let decryptedWalletList: AptosWalletObject[];
-    try {
-      const item = CryptoJS.AES.decrypt(encryptedWalletList, password);
-      decryptedWalletList = JSON.parse(item.toString(CryptoJS.enc.Utf8));
-    } catch (error) {
-      throw new Error('Incorrect password');
-    }
-    setWalletList(decryptedWalletList);
-    const aptosWalletState = getAptosAccountState(decryptedWalletList[0]);
-    setActiveWallet(aptosWalletState);
-    // TODO: better no saving password in local storage
-    window.localStorage.setItem(CONNECT_PASSWORD, password);
-  }, []);
-
-  useEffect(() => {
-    if (savedPassword) {
-      connectAccount(savedPassword);
-    }
-  }, [savedPassword]);
-
-  const storeEncryptedWallet = useCallback(
-    ({ updatedWalletList, password }: StoreWalletStateProp) => {
-      const encryptPassword = password || window.localStorage.getItem(CONNECT_PASSWORD) || '';
-      try {
-        const encryptedWallet = CryptoJS.AES.encrypt(
-          JSON.stringify(updatedWalletList),
-          encryptPassword
-        ).toString();
-        window.localStorage.setItem(ENCRYPTED_WALLET_LIST, encryptedWallet);
-        setWalletList(updatedWalletList);
-        setInitialized(true);
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.log(error);
+  // Add new account or import account from private key
+  const addAccount = useCallback(
+    async (walletName?: string, importedAccount?: AptosAccountState) => {
+      if (importedAccount) {
+        if (importsEncryptionKey) {
+          const nonce = nacl.randomBytes(nacl.secretbox.nonceLength);
+          const plaintext = importedAccount.signingKey.secretKey;
+          const ciphertext = nacl.secretbox(plaintext, nonce, importsEncryptionKey);
+          const privateObjKey = importedAccount.toPrivateKeyObject();
+          let newPrivateKeyImports = { ...privateKeyImports };
+          newPrivateKeyImports[privateObjKey.address || ''] = {
+            ciphertext: bs58.encode(ciphertext),
+            nonce: bs58.encode(nonce)
+          };
+          const numOfWalletList = Object.keys(walletList).length;
+          if (walletName) {
+            const updatedWalletList = { ...walletList, [numOfWalletList]: { walletName } };
+            setWalletList(updatedWalletList);
+            setWalletNameList(updatedWalletList);
+          }
+          storePrivateKeyImports(newPrivateKeyImports);
+          setPrivateKeyImports(newPrivateKeyImports);
+        }
       }
     },
-    []
+    [importsEncryptionKey, privateKeyImports, walletList]
   );
+
+  const loginAccount = useCallback(async () => {
+    if (seed && derivationPath) {
+      if (!privateKeyImports || !Object.keys(privateKeyImports).length) {
+        // create new account when there is no other accounts imported
+        const account = createNewAccount();
+        await faucetClient.fundAccount(account.address(), 0);
+        const newWalletAccount = walletList[0];
+        const privateKeyObj = account?.toPrivateKeyObject();
+        await addAccount(undefined, account);
+        const selectedWallet = {
+          ...newWalletAccount,
+          address: privateKeyObj?.address,
+          aptosAccount: account
+        };
+        setActiveWallet(selectedWallet);
+        setWalletNameList(walletList);
+      } else {
+        // login existing account
+        setActiveAptosWallet(activeWallet?.address);
+      }
+    }
+  }, [
+    seed,
+    derivationPath,
+    setActiveAptosWallet,
+    privateKeyImports,
+    addAccount,
+    walletList,
+    activeWallet?.address
+  ]);
+
+  useEffect(() => {
+    // This is used to listen on any updates of Mnemonic/Seed when new account is created/login
+    loginAccount();
+  }, [aptosWalletAccounts, loginAccount, seed, derivationPath]);
+
+  // Update wallet name
+  const updateAccountInfo = useCallback(
+    (address: string, walletName: string) => {
+      const walletIdx = aptosWalletAccounts.findIndex((acc) => acc.address === address);
+      const updatedWallets = { ...walletList, [walletIdx]: { walletName } };
+      setWalletList(updatedWallets);
+      setWalletNameList(updatedWallets);
+    },
+    [aptosWalletAccounts, walletList]
+  );
+
+  // useEffect(() => {
+  //   if (window.parent && activeWallet?.aptosAccount) {
+  //     window.parent.postMessage({ address: activeWallet?.aptosAccount.address() }, '*');
+  //   }
+  // }, [activeWallet]);
 
   const updateNetworkState = useCallback((network: AptosNetwork) => {
     try {
@@ -134,45 +186,24 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
     }
   }, []);
 
-  // const setActiveAptosWallet = useCallback(
-  //   (walletName?: string) => {
-  //     if (!walletList || !walletList.length) throw new Error('Please login first');
-  //     let selectedWallet: AptosWalletObject | undefined = walletList[0];
-  //     if (walletName) {
-  //       selectedWallet = walletList.find((wallet) => wallet.walletName === walletName);
-  //     }
-  //     if (!selectedWallet) throw new Error('Wallet not found');
-  //     const activeAptosWallet = getAptosAccountState(selectedWallet);
-  //     setActiveWallet(activeAptosWallet);
-  //   },
-  //   [setActiveWallet, walletList]
-  // );
-
   const disconnect = useCallback(() => {
+    logoutAccount();
     setActiveWallet(undefined);
-    setWalletList([]);
-    window.localStorage.removeItem(CONNECT_PASSWORD);
   }, []);
-
-  const openModal = useCallback(() => setOpen(true), []);
-  const closeModal = useCallback(() => setOpen(false), []);
 
   return (
     <AptosWalletContext.Provider
       value={{
         activeWallet,
-        // setActiveAptosWallet,
+        setActiveAptosWallet,
+        addAccount,
         aptosNetwork,
         disconnect,
         updateNetworkState,
-        walletList,
-        storeEncryptedWallet,
-        open,
-        openModal,
-        closeModal,
-        // connectAccount,
-        initialized
-        // hippoWallet
+        walletList: privateKeyImports,
+        updateAccountInfo,
+        setWalletList,
+        aptosWalletAccounts
       }}>
       {children}
     </AptosWalletContext.Provider>

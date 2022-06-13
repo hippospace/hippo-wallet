@@ -1,11 +1,10 @@
 import Button from 'components/Button';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useCallback } from 'react';
 import { generateMnemonicAndSeed } from 'utils/wallet-seed';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import CheckboxInput from 'components/CheckboxInput';
 import { useFormikContext } from 'formik';
 import { FormValues } from '../types';
-import { useCallback } from 'react';
 
 interface TProps {
   goForward: () => void;
@@ -13,23 +12,17 @@ interface TProps {
 
 const SeedWordsForm: React.FC<TProps> = ({ goForward }) => {
   const { values, setFieldValue } = useFormikContext<FormValues>();
+
   const createMnemoicAndSeed = useCallback(async () => {
     const mnemonicAndSeed = await generateMnemonicAndSeed();
     setFieldValue('mnemonicAndSeed', mnemonicAndSeed);
   }, []);
+
   useEffect(() => {
     createMnemoicAndSeed();
   }, []);
-  const { mnemonicAndSeed } = values;
 
-  // const downloadMnemonic = useCallback(() => {
-  //   const url = window.URL.createObjectURL(new Blob([mnemonicAndSeed?.mnemonic || '']));
-  //   const link = document.createElement('a');
-  //   link.href = url;
-  //   link.setAttribute('download', 'hippo.txt');
-  //   document.body.appendChild(link);
-  //   link.click();
-  // }, [mnemonicAndSeed?.mnemonic]);
+  const { mnemonicAndSeed } = values;
 
   const renderMnemonicList = useMemo(() => {
     const list = mnemonicAndSeed?.mnemonic.split(' ');

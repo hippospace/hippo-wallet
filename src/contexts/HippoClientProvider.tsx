@@ -122,7 +122,7 @@ const HippoClientProvider: FC<TProviderProps> = ({ children }) => {
         );
         const transactionInfo = { [fromSymbol]: uiAmtIn, [toSymbol]: uiAmtOutMin };
         if (payload) {
-          setTransaction({ type: 'swap', payload, transactionInfo, callback: requestTransaction });
+          setTransaction({ type: 'swap', payload, transactionInfo });
           // await sendPayloadTx(aptosClient, activeWallet.aptosAccount, payload);
           // await hippoWallet?.refreshStores();
           // setRefresh(true);
@@ -155,8 +155,8 @@ const HippoClientProvider: FC<TProviderProps> = ({ children }) => {
           setTransaction({
             type: 'deposit',
             payload,
-            transactionInfo,
-            callback: requestTransaction
+            transactionInfo
+            // callback: requestTransaction
           });
         }
       } catch (error) {
@@ -197,8 +197,8 @@ const HippoClientProvider: FC<TProviderProps> = ({ children }) => {
           setTransaction({
             type: 'withdraw',
             payload,
-            transactionInfo,
-            callback: requestTransaction
+            transactionInfo
+            // callback: requestTransaction
           });
         }
       } catch (error) {

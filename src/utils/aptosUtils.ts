@@ -1,10 +1,12 @@
 import { AptosAccount } from 'aptos';
 import { Buffer } from 'buffer';
 import {
+  APTOS_IMPORTED_WALLET_LIST,
+  WALLET_NAME_LIST,
   ENCRYPTED_WALLET_LIST,
   WALLET_STATE_NETWORK_LOCAL_STORAGE_KEY
 } from 'config/aptosConstants';
-import { ActiveAptosWallet, AptosWalletObject } from 'types/aptos';
+import { AptosImportedWalletObject, WalletNameObject } from 'types/aptos';
 
 export function createNewAccount(): AptosAccount {
   const account = new AptosAccount();
@@ -28,16 +30,29 @@ export function getEncryptedLocalState(): string | null {
   return item;
 }
 
-export function getAptosAccountState(
-  activeWalletObj: AptosWalletObject
-): ActiveAptosWallet | undefined {
-  return activeWalletObj
-    ? {
-        ...activeWalletObj,
-        aptosAccount: AptosAccount.fromAptosAccountObject(activeWalletObj.aptosAccountObj)
-      }
-    : undefined;
-}
+export const getAptosWalletList = () => {
+  let item = window.localStorage.getItem(WALLET_NAME_LIST);
+  if (item) {
+    return JSON.parse(item) as WalletNameObject;
+  }
+  return {} as WalletNameObject;
+};
+
+export const getPrivateKeyImports = () => {
+  let item = window.localStorage.getItem(APTOS_IMPORTED_WALLET_LIST);
+  if (item) {
+    return JSON.parse(item) as Record<string, AptosImportedWalletObject>;
+  }
+  return {} as Record<string, AptosImportedWalletObject>;
+};
+
+export const storePrivateKeyImports = (item: Record<string, AptosImportedWalletObject>) => {
+  window.localStorage.setItem(APTOS_IMPORTED_WALLET_LIST, JSON.stringify(item));
+};
+
+export const setWalletNameList = (walletList: WalletNameObject) => {
+  window.localStorage.setItem(WALLET_NAME_LIST, JSON.stringify(walletList));
+};
 
 export type AptosNetwork = 'http://0.0.0.0:8080' | 'https://fullnode.devnet.aptoslabs.com';
 

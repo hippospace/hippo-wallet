@@ -14,7 +14,7 @@ const formItemLayout = {
 };
 
 const WalletName: React.FC<TProps> = ({ goForward }) => {
-  const { errors, values, handleChange } = useFormikContext<FormValues>();
+  const { errors, values, handleChange, touched, handleBlur } = useFormikContext<FormValues>();
 
   return (
     <div className="flex flex-col items-left gap-10 w-full">
@@ -26,9 +26,14 @@ const WalletName: React.FC<TProps> = ({ goForward }) => {
         {...formItemLayout}
         className="w-full"
         label="Name"
-        validateStatus={errors.walletName ? 'error' : ''}
-        help={errors.walletName}>
-        <TextInput name="walletName" value={values.walletName} onChange={handleChange} />
+        validateStatus={errors.walletName && touched.walletName ? 'error' : ''}
+        help={errors.walletName && touched.walletName ? errors.walletName : ''}>
+        <TextInput
+          name="walletName"
+          value={values.walletName}
+          onChange={handleChange}
+          onBlur={handleBlur}
+        />
       </Form.Item>
       <Button
         className="w-[430px] mx-auto font-bold mt-40"

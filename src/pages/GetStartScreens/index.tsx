@@ -1,21 +1,27 @@
-// import useAptosWallet from 'hooks/useAptosWallet';
-// import { useState } from 'react';
 import LogoIcon from 'components/LogoIcon';
-// import CreateWallet from './CreateWallet';
-// import WalletLogin from './WalletLogin';
 import Button from 'components/Button';
 import usePage from 'hooks/usePage';
-import CreateWallet from 'pages/CreateWallet';
+import { useHasLockedMnemonicAndSeed } from 'utils/wallet-seed';
+import CreateWallet from './CreateWallet';
+import WalletLogin from './WalletLogin';
+import RestoreWallet from './RestoreWallet';
 
 const GetStartScreens: React.FC = () => {
-  // const { initialized } = useAptosWallet();
   const [page, setPage] = usePage();
+  const [hasLockedMnemonicAndSeed, loading] = useHasLockedMnemonicAndSeed();
 
-  // if (screen === 'createWallet') {
-  //   return <CreateWallet />;
-  // } else if (screen === 'login') {
-  //   return <WalletLogin onCreateNew={() => setScreen('createWallet')} />;
-  // }
+  if (loading) {
+    return null;
+  }
+
+  if (page === 'restoreWallet') {
+    return <RestoreWallet />;
+  }
+
+  if (hasLockedMnemonicAndSeed) {
+    return <WalletLogin onRecoverPassword={() => setPage('restoreWallet')} />;
+  }
+
   if (page === 'createWallet') {
     return <CreateWallet />;
   }

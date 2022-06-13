@@ -1,6 +1,8 @@
 export const KEY_LENGTH: number = 64;
 export const ENCRYPTED_WALLET_LIST = 'encryptedAptosWalletList';
 export const CONNECT_PASSWORD = 'aptosWalletPassword';
+export const WALLET_NAME_LIST = 'hippo-wallets';
+export const APTOS_IMPORTED_WALLET_LIST = 'hippo-imported-wallets';
 export const LOCKED_CREDENTIAL = 'hippo-locked';
 export const UNLOCKED_CREDENTIAL = 'hippo-unlocked';
 
