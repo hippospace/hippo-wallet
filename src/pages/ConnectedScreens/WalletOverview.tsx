@@ -8,7 +8,7 @@ interface TProps {
 }
 
 const WalletOverview: React.FC<TProps> = ({ onShowWalletList }) => {
-  const { activeWallet } = useAptosWallet();
+  const { activeWallet, aptosWalletAccounts } = useAptosWallet();
   const privateKeyObject = activeWallet?.aptosAccount?.toPrivateKeyObject();
   const credentials = useMemo(
     () => [
@@ -20,6 +20,10 @@ const WalletOverview: React.FC<TProps> = ({ onShowWalletList }) => {
     ],
     [privateKeyObject]
   );
+  const walletName = useMemo(() => {
+    return aptosWalletAccounts.find((account) => account.address === activeWallet?.address)
+      ?.walletName;
+  }, [aptosWalletAccounts, activeWallet]);
   const [copied, setCopied] = useState(credentials.map((c) => ({ [c.key]: false })));
 
   const handleOnClickCopy = (key: string) => {
@@ -42,7 +46,7 @@ const WalletOverview: React.FC<TProps> = ({ onShowWalletList }) => {
       <SwapIcon className="rotate-90 cursor-pointer" onClick={onShowWalletList} />
       <div className="flex flex-col gap-4 items-center">
         <div className="flex gap-2 items-center">
-          <h3 className="text-primary font-bold">{activeWallet?.walletName}</h3>
+          <h3 className="text-primary font-bold">{walletName}</h3>
         </div>
         {credentials.map(({ text, key }) => (
           <div className="flex gap-2 justify-between" key={key}>

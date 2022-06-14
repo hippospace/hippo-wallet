@@ -5,7 +5,7 @@ import { useFormik } from 'formik';
 import LogoIcon from 'components/LogoIcon';
 import * as yup from 'yup';
 import { loadMnemonicAndSeed } from 'utils/wallet-seed';
-import CheckboxInput from 'components/CheckboxInput';
+// import CheckboxInput from 'components/CheckboxInput';
 
 interface TFormProps {
   password: string;
@@ -41,7 +41,7 @@ const WalletLogin: React.FC<TProps> = ({ onRecoverPassword }) => {
   const formik = useFormik({
     initialValues: {
       password: '',
-      stayLoggedIn: false
+      stayLoggedIn: true
     },
     validationSchema: connectWalletSchema,
     onSubmit
@@ -66,11 +66,11 @@ const WalletLogin: React.FC<TProps> = ({ onRecoverPassword }) => {
               onChange={formik.handleChange}
             />
           </Form.Item>
-          <CheckboxInput
+          {/* <CheckboxInput
             checked={formik.values.stayLoggedIn}
             onChange={(e) => formik.setFieldValue('stayLoggedIn', e.target.checked)}>
             <div className="text-grey-900">Keep wallet unlocked</div>
-          </CheckboxInput>
+          </CheckboxInput> */}
         </div>
         <div className="w-full px-8 pt-20">
           <Button type="submit" className="w-full font-bold" isLoading={formik.isSubmitting}>

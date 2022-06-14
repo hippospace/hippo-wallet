@@ -7,6 +7,7 @@ import { aptosClient, faucetClient } from 'config/aptosClient';
 import { sendPayloadTx } from 'utils/hippoWalletUtil';
 import { message } from 'components/Antd';
 import { TTransaction } from 'types/hippo';
+// import { UserTransactionRequest } from 'aptos/dist/api/data-contracts';
 
 interface HippoClientContextType {
   hippoWallet?: HippoWalletClient;
@@ -105,6 +106,10 @@ const HippoClientProvider: FC<TProviderProps> = ({ children }) => {
     },
     [activeWallet, hippoWallet]
   );
+
+  // const getRequestInfo = useCallback((request: UserTransactionRequest) => {
+
+  // })
 
   const requestSwap = useCallback(
     async (fromSymbol: string, toSymbol: string, uiAmtIn: number, uiAmtOutMin: number) => {

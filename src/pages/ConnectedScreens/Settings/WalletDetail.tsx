@@ -3,7 +3,7 @@ import Button from 'components/Button';
 import TextInput from 'components/TextInput';
 import { useFormik } from 'formik';
 import useAptosWallet from 'hooks/useAptosWallet';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { CopyIcon } from 'resources/icons';
 import { useUnlockedMnemonicAndSeed } from 'utils/wallet-seed';
@@ -29,12 +29,15 @@ const WalletDetailSchema = yup.object({
 });
 
 const WalletDetail: React.FC<TProps> = ({ onSuccess }) => {
-  const { updateAccountInfo, activeWallet } = useAptosWallet();
+  const { updateAccountInfo, activeWallet, aptosWalletAccounts } = useAptosWallet();
   const { mnemonic } = useUnlockedMnemonicAndSeed();
   const privateKeyObject = activeWallet?.aptosAccount?.toPrivateKeyObject();
   const [copied, setCopied] = useState(false);
   const [mnemonicCopied, setMnemonicCopied] = useState(false);
-
+  const currentWalletName = useMemo(() => {
+    return aptosWalletAccounts.find((account) => account.address === activeWallet?.address)
+      ?.walletName;
+  }, [aptosWalletAccounts, activeWallet]);
   const handleOnClickCopy = (isMnemonic?: boolean) => {
     if (isMnemonic) {
       setMnemonicCopied(true);
@@ -63,7 +66,7 @@ const WalletDetail: React.FC<TProps> = ({ onSuccess }) => {
 
   const formik = useFormik({
     initialValues: {
-      walletName: activeWallet?.walletName || '',
+      walletName: currentWalletName || '',
       privateKey: privateKeyObject?.privateKeyHex || ''
     },
     validationSchema: WalletDetailSchema,

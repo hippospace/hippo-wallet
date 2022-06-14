@@ -1,11 +1,12 @@
 import { createContext, FC, ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import {
+  ActiveAptosWallet,
   AptosAccountState,
   AptosImportedWalletObject,
   AptosWalletAccount,
   WalletNameObject
 } from 'types/aptos';
-import { WALLET_STATE_NETWORK_LOCAL_STORAGE_KEY } from 'config/aptosConstants';
+import { UNLOCKED_CREDENTIAL, WALLET_STATE_NETWORK_LOCAL_STORAGE_KEY } from 'config/aptosConstants';
 import {
   AptosNetwork,
   createNewAccount,
@@ -20,6 +21,7 @@ import nacl from 'tweetnacl';
 import bs58 from 'bs58';
 import { AptosAccount } from 'aptos';
 import { faucetClient } from 'config/aptosClient';
+import { useLocalStorage } from 'hooks/useLocalStorage';
 
 interface AptosWalletContextType {
   activeWallet?: AptosWalletAccount;
@@ -47,6 +49,12 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
   const [activeWallet, setActiveWallet] = useState<AptosWalletAccount | undefined>(undefined);
   const [aptosNetwork, setAptosNetwork] = useState<AptosNetwork | null>(() =>
     getLocalStorageNetworkState()
+  );
+  const { useLocalStorageState } = useLocalStorage();
+  const [currentWallet, setCurrentWallet] = useLocalStorageState<ActiveAptosWallet>(
+    'hippoActiveWallet',
+    undefined,
+    true
   );
   const {
     mnemonic: { seed, derivationPath, importsEncryptionKey }
@@ -139,9 +147,12 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
         };
         setActiveWallet(selectedWallet);
         setWalletNameList(walletList);
-      } else {
+      } else if (currentWallet?.toString() && !activeWallet?.address) {
         // login existing account
-        setActiveAptosWallet(activeWallet?.address);
+        console.log('login >>>', currentWallet?.toString(), activeWallet?.address);
+        setActiveAptosWallet(currentWallet?.toString());
+      } else if (!currentWallet?.toString() && !activeWallet?.address) {
+        setActiveAptosWallet();
       }
     }
   }, [
@@ -151,7 +162,8 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
     privateKeyImports,
     addAccount,
     walletList,
-    activeWallet?.address
+    activeWallet?.address,
+    currentWallet
   ]);
 
   useEffect(() => {
@@ -170,11 +182,13 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
     [aptosWalletAccounts, walletList]
   );
 
-  // useEffect(() => {
-  //   if (window.parent && activeWallet?.aptosAccount) {
-  //     window.parent.postMessage({ address: activeWallet?.aptosAccount.address() }, '*');
-  //   }
-  // }, [activeWallet]);
+  useEffect(() => {
+    if (window.parent && activeWallet?.aptosAccount) {
+      const newWalletAddress = activeWallet?.aptosAccount.address();
+      setCurrentWallet(newWalletAddress?.toString());
+      window.parent.postMessage({ method: 'account', address: newWalletAddress }, '*');
+    }
+  }, [activeWallet]);
 
   const updateNetworkState = useCallback((network: AptosNetwork) => {
     try {
@@ -188,8 +202,12 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
 
   const disconnect = useCallback(() => {
     logoutAccount();
-    setActiveWallet(undefined);
-  }, []);
+    const newWalletAddress = undefined;
+    setActiveWallet(newWalletAddress);
+    sessionStorage.removeItem(UNLOCKED_CREDENTIAL);
+    setCurrentWallet(null);
+    window.parent.postMessage({ method: 'account', address: newWalletAddress }, '*');
+  }, [setCurrentWallet]);
 
   return (
     <AptosWalletContext.Provider

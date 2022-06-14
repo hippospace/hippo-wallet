@@ -137,11 +137,14 @@ export const storeMnemonicAndSeed = async (
       })
     );
     localStorage.removeItem(UNLOCKED_CREDENTIAL);
+    // localStorage.setItem(UNLOCKED_CREDENTIAL, plaintext);
+    sessionStorage.setItem(UNLOCKED_CREDENTIAL, plaintext);
   } else {
     localStorage.setItem(UNLOCKED_CREDENTIAL, plaintext);
     localStorage.removeItem(LOCKED_CREDENTIAL);
   }
-  sessionStorage.removeItem(UNLOCKED_CREDENTIAL);
+  // sessionStorage.removeItem(UNLOCKED_CREDENTIAL);
+  // sessionStorage.setItem(UNLOCKED_CREDENTIAL, plaintext);
 
   const importsEncryptionKey = deriveImportsEncryptionKey(seed);
   setUnlockedMnemonicAndSeed(mnemonic, seed, importsEncryptionKey, derivationPath);
