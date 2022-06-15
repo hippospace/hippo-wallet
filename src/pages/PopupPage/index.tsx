@@ -13,20 +13,34 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { walletAddressEllipsis } from 'utils/utility';
 import styles from './TransactionModal.module.scss';
 
+interface RequestType {
+  method: 'signTransaction' | 'signAndSubmit';
+  request: UserTransactionRequest;
+}
 interface TProps {
   opener: any;
-  initialRequest: UserTransactionRequest;
+  initialRequest?: RequestType;
 }
 
 const AUTHORIZED_METHODS = ['signTransaction', 'signAndSubmit'];
 
-const PopupPage: React.FC<TProps> = ({ opener, initialRequest }) => {
+const getInitialRequest = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const request = urlParams.get('request');
+  if (request) {
+    return JSON.parse(request) as RequestType;
+  }
+  return undefined;
+};
+
+const PopupPage: React.FC<TProps> = ({ opener }) => {
   const { hippoWallet } = useHippoClient();
-  const [request, setRequest] = useState<UserTransactionRequest>(initialRequest);
+  const origin = useMemo(() => {
+    return window.location.origin;
+  }, []);
+  const [request, setRequest] = useState<RequestType | undefined>(getInitialRequest());
   const [loading, setLoading] = useState(false);
   const { activeWallet } = useAptosWallet();
-  const hasConnectedAccount = !!activeWallet;
-  const privateKeyObject = activeWallet?.aptosAccount?.toPrivateKeyObject();
   const postMessage = useCallback(
     (message: any) => {
       opener.postMessage({ jsonrpc: '2.0', ...message }, '*');
@@ -35,29 +49,35 @@ const PopupPage: React.FC<TProps> = ({ opener, initialRequest }) => {
   );
 
   useEffect(() => {
-    function messageHandler(e: MessageEvent<UserTransactionRequest>) {
+    function messageHandler(e: MessageEvent<RequestType>) {
       if (e.origin === origin && e.source === window.opener) {
-        if (!AUTHORIZED_METHODS.includes(e.data.payload.type)) {
-          postMessage({ error: 'Unsupported method', type: e.data.payload.type });
+        if (!AUTHORIZED_METHODS.includes(e.data.method)) {
+          postMessage({ error: 'Unsupported method', type: e.data.method });
         }
         setRequest(e.data);
       }
     }
     window.addEventListener('message', messageHandler);
     return () => window.removeEventListener('message', messageHandler);
-  }, [postMessage]);
+  }, [postMessage, origin]);
 
   const unloadHandler = useCallback(() => {
     postMessage({ method: 'disconnected' });
   }, [postMessage]);
 
-  const onCancel = () => unloadHandler();
+  const onCancel = () => {
+    window.close();
+    unloadHandler();
+  };
 
   const handleOnClick = async () => {
     setLoading(true);
     try {
-      if (activeWallet?.aptosAccount) {
-        const signedTxn = await aptosClient.signTransaction(activeWallet?.aptosAccount, request);
+      if (activeWallet?.aptosAccount && request) {
+        const signedTxn = await aptosClient.signTransaction(
+          activeWallet?.aptosAccount,
+          request.request
+        );
         const txnResult = await aptosClient.submitTransaction(signedTxn);
         await aptosClient.waitForTransaction(txnResult.hash);
         const txDetails = (await aptosClient.getTransaction(
@@ -77,8 +97,10 @@ const PopupPage: React.FC<TProps> = ({ opener, initialRequest }) => {
         errorMsg = error.message;
       }
       postMessage({ method: 'fail', error: errorMsg });
+    } finally {
+      window.close();
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const renderTransactionDetail = useMemo(() => {
@@ -91,7 +113,7 @@ const PopupPage: React.FC<TProps> = ({ opener, initialRequest }) => {
       gas_currency_code,
       max_gas_amount,
       expiration_timestamp_secs
-    } = request;
+    } = request.request;
     if (payload && (payload as ScriptFunctionPayload).function) {
       const [address, moduleName, functionName] = (
         payload as ScriptFunctionPayload
@@ -134,7 +156,7 @@ const PopupPage: React.FC<TProps> = ({ opener, initialRequest }) => {
   }, [request]);
 
   return (
-    <div className="">
+    <div className="p-8">
       <div className="flex flex-col items-center gap-10">
         {/* <h5 className="font-bold text-grey-900">
           {request?.payload.type} ({walletAddressEllipsis(privateKeyObject?.address || '')})

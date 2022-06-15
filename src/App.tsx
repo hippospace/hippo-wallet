@@ -10,10 +10,8 @@ const WebWallet: React.FC = () => {
     return <GetStartScreens />;
   }
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const request = urlParams.get('request');
-  if (request) {
-    return <PopupPage opener={window.parent} initialRequest={JSON.parse(request)} />;
+  if (window.opener) {
+    return <PopupPage opener={window.opener} />;
   }
 
   return <ConnectedScreens />;
