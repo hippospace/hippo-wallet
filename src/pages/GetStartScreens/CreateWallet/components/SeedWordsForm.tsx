@@ -47,7 +47,7 @@ const SeedWordsForm: React.FC<TProps> = ({ goForward }) => {
           text={mnemonicAndSeed?.mnemonic || ''}
           onCopy={() => setFieldValue('copied', true)}>
           <Button className="font-bold">
-            <div className="text-inherit">Download Backup Mnemonic File (Required)</div>
+            <div className="text-inherit">Copy Backup Mnemonic File (Required)</div>
           </Button>
         </CopyToClipboard>
         <CheckboxInput

@@ -42,7 +42,7 @@ const GetStartScreens: React.FC = () => {
         <Button
           variant="outlined"
           className="w-full font-bold"
-          onClick={() => setPage('importWallet')}>
+          onClick={() => setPage('restoreWallet')}>
           I already have a wallet
         </Button>
       </div>
