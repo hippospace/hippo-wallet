@@ -1,5 +1,5 @@
 import Button from 'components/Button';
-import { useEffect, useMemo, useCallback } from 'react';
+import { useEffect, useMemo, useCallback, useState } from 'react';
 import { generateMnemonicAndSeed } from 'utils/wallet-seed';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import CheckboxInput from 'components/CheckboxInput';
@@ -12,6 +12,7 @@ interface TProps {
 
 const SeedWordsForm: React.FC<TProps> = ({ goForward }) => {
   const { values, setFieldValue } = useFormikContext<FormValues>();
+  const [copied, setCopied] = useState(false);
 
   const createMnemoicAndSeed = useCallback(async () => {
     const mnemonicAndSeed = await generateMnemonicAndSeed();
@@ -20,6 +21,13 @@ const SeedWordsForm: React.FC<TProps> = ({ goForward }) => {
 
   useEffect(() => {
     createMnemoicAndSeed();
+  }, []);
+
+  const handleOnClickCopy = useCallback(() => {
+    setCopied(true);
+    setTimeout(() => {
+      setCopied(() => false);
+    }, 2000);
   }, []);
 
   const { mnemonicAndSeed } = values;
@@ -45,9 +53,14 @@ const SeedWordsForm: React.FC<TProps> = ({ goForward }) => {
       <div className="flex flex-col gap-4">
         <CopyToClipboard
           text={mnemonicAndSeed?.mnemonic || ''}
-          onCopy={() => setFieldValue('copied', true)}>
+          onCopy={() => {
+            handleOnClickCopy();
+            setFieldValue('copied', true);
+          }}>
           <Button className="font-bold">
-            <div className="text-inherit">Copy Backup Mnemonic File (Required)</div>
+            <div className="text-inherit">
+              {copied ? 'Succesfully Copied' : 'Copy Backup Mnemonic File (Required)'}
+            </div>
           </Button>
         </CopyToClipboard>
         <CheckboxInput
