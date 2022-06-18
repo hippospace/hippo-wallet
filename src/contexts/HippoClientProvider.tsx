@@ -1,7 +1,13 @@
 import { createContext, FC, ReactNode, useCallback, useEffect, useState } from 'react';
 import { hippoSwapClient, hippoWalletClient } from 'config/hippoWalletClient';
-import { HippoSwapClient, HippoWalletClient, UITokenAmount, X0x1 } from '@manahippo/hippo-sdk';
-import { TokenRegistry } from '@manahippo/hippo-sdk/dist/generated/X0x49c5e3ec5041062f02a352e4a2d03ce2bb820d94e8ca736b08a324f8dc634790';
+import {
+  HippoSwapClient,
+  HippoWalletClient,
+  PoolType,
+  UITokenAmount,
+  X0x1
+} from '@manahippo/hippo-sdk';
+import { TokenRegistry } from '@manahippo/hippo-sdk/dist/generated/X0xf70ac33c984f8b7bead655ad239d246f1c0e3ca55fe0b8bfc119aa529c4630e8';
 import useAptosWallet from 'hooks/useAptosWallet';
 import { aptosClient, faucetClient } from 'config/aptosClient';
 import { sendPayloadTx } from 'utils/hippoWalletUtil';
@@ -16,10 +22,17 @@ interface HippoClientContextType {
   tokenInfos?: Record<string, TokenRegistry.TokenInfo>;
   requestFaucet: (symbol: string, uiAmount: string) => {};
   requestSwap: (fromSymbol: string, toSymbol: string, uiAmtIn: number, uiAmtOutMin: number) => {};
-  requestDeposit: (lhsSymbol: string, rhsSymbol: string, lhsUiAmt: number, rhsUiAmt: number) => {};
+  requestDeposit: (
+    lhsSymbol: string,
+    rhsSymbol: string,
+    poolType: PoolType,
+    lhsUiAmt: number,
+    rhsUiAmt: number
+  ) => {};
   requestWithdraw: (
     lhsSymbol: string,
     rhsSymbol: string,
+    poolType: PoolType,
     liqiudityAmt: UITokenAmount,
     lhsMinAmt: UITokenAmount,
     rhsMinAmt: UITokenAmount
@@ -119,12 +132,11 @@ const HippoClientProvider: FC<TProviderProps> = ({ children }) => {
         if (uiAmtIn <= 0) {
           throw new Error('Input amount needs to be greater than 0');
         }
-        const payload = await hippoSwap.makeCPSwapPayload(
-          fromSymbol,
-          toSymbol,
-          uiAmtIn,
-          uiAmtOutMin
-        );
+        const best = await hippoSwap.getBestQuoteBySymbols(fromSymbol, toSymbol, uiAmtIn, 3);
+        if (!best) {
+          throw new Error('Route not found');
+        }
+        const payload = await best.bestRoute.makeSwapPayload(uiAmtIn, uiAmtOutMin);
         const transactionInfo = { [fromSymbol]: uiAmtIn, [toSymbol]: uiAmtOutMin };
         if (payload) {
           setTransaction({ type: 'swap', payload, transactionInfo });
@@ -144,17 +156,22 @@ const HippoClientProvider: FC<TProviderProps> = ({ children }) => {
   );
 
   const requestDeposit = useCallback(
-    async (lhsSymbol: string, rhsSymbol: string, lhsUiAmt: number, rhsUiAmt: number) => {
+    async (
+      lhsSymbol: string,
+      rhsSymbol: string,
+      poolType: PoolType,
+      lhsUiAmt: number,
+      rhsUiAmt: number
+    ) => {
       try {
         if (!activeWallet || !activeWallet.aptosAccount || !hippoSwap) {
           throw new Error('Please login first');
         }
-        const payload = await hippoSwap.makeCPAddLiquidityPayload(
-          lhsSymbol,
-          rhsSymbol,
-          lhsUiAmt,
-          rhsUiAmt
-        );
+        const pools = hippoSwap.getDirectPoolsBySymbolsAndPoolType(lhsSymbol, rhsSymbol, poolType);
+        if (pools.length === 0) {
+          throw new Error('Such pool does not exist');
+        }
+        const payload = await pools[0].makeAddLiquidityPayload(lhsUiAmt, rhsUiAmt);
         const transactionInfo = { [lhsSymbol]: lhsUiAmt, [rhsSymbol]: rhsUiAmt };
         if (payload) {
           setTransaction({
@@ -178,6 +195,7 @@ const HippoClientProvider: FC<TProviderProps> = ({ children }) => {
     async (
       lhsSymbol: string,
       rhsSymbol: string,
+      poolType: PoolType,
       liqiudityAmt: UITokenAmount,
       lhsMinAmt: UITokenAmount,
       rhsMinAmt: UITokenAmount
@@ -186,9 +204,11 @@ const HippoClientProvider: FC<TProviderProps> = ({ children }) => {
         if (!activeWallet || !activeWallet.aptosAccount || !hippoSwap) {
           throw new Error('Please login first');
         }
-        const payload = await hippoSwap?.makeCPRemoveLiquidityPayload(
-          lhsSymbol,
-          rhsSymbol,
+        const pools = hippoSwap.getDirectPoolsBySymbolsAndPoolType(lhsSymbol, rhsSymbol, poolType);
+        if (pools.length === 0) {
+          throw new Error('Such pool does not exist');
+        }
+        const payload = await pools[0].makeRemoveLiquidityPayload(
           liqiudityAmt,
           lhsMinAmt,
           rhsMinAmt

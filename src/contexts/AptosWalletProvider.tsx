@@ -65,26 +65,35 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
       return { aptosWalletAccounts: [{} as AptosWalletAccount] };
     }
 
-    const importedAccounts = Object.keys(privateKeyImports).map((address, idx) => {
-      const { ciphertext, nonce } = privateKeyImports[address];
-      let aptosAccount = {} as AptosAccount;
-      if (importsEncryptionKey) {
-        const privateKey = nacl.secretbox.open(
-          bs58.decode(ciphertext),
-          bs58.decode(nonce),
-          importsEncryptionKey
-        );
-        if (privateKey) {
-          aptosAccount = new AptosAccount(privateKey);
+    const importedAccounts = Object.keys(privateKeyImports)
+      .map((address, idx) => {
+        const { ciphertext, nonce } = privateKeyImports[address];
+        let aptosAccount = {} as AptosAccount;
+        if (importsEncryptionKey) {
+          const privateKey = nacl.secretbox.open(
+            bs58.decode(ciphertext),
+            bs58.decode(nonce),
+            importsEncryptionKey
+          );
+          if (privateKey) {
+            aptosAccount = new AptosAccount(privateKey);
+          }
         }
-      }
-      const wallet = walletList[idx];
-      return {
-        address: address,
-        walletName: wallet.walletName,
-        aptosAccount
-      };
-    });
+        const wallet = walletList[idx];
+        if (!wallet) {
+          return {
+            address: '',
+            walletName: 'INVALID_WALLET_NAME_',
+            aptosAccount
+          };
+        }
+        return {
+          address: address,
+          walletName: wallet.walletName,
+          aptosAccount
+        };
+      })
+      .filter((w) => w.address != '');
     return { aptosWalletAccounts: [...importedAccounts] };
   }, [seed, derivationPath, privateKeyImports, importsEncryptionKey, walletList]);
 
