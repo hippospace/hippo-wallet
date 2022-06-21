@@ -32,7 +32,9 @@ const CoinList: React.FC = () => {
 
   return (
     <div className="">
-      <div className="flex flex-col gap-4 overflow-y-scroll h-[480px]">{renderTokenList}</div>
+      <div className="flex flex-col gap-4 overflow-y-scroll no-scrollbar h-[480px]">
+        {renderTokenList}
+      </div>
     </div>
   );
 };
