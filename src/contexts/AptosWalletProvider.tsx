@@ -215,7 +215,7 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
     setActiveWallet(newWalletAddress);
     sessionStorage.removeItem(UNLOCKED_CREDENTIAL);
     setCurrentWallet(null);
-    window.parent.postMessage({ method: 'account', address: newWalletAddress }, '*');
+    window.parent.postMessage({ method: 'disconnected' }, '*');
   }, [setCurrentWallet]);
 
   return (
