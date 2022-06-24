@@ -8,7 +8,7 @@ How to implement a react app into Chrome Extension?
     > If `craco: command not found`, run `yarn add @craco/craco` or `npm install @craco/craco --save` before `yarn build`
 2. Open **Extension** from More Tools section or paste [chrome://extensions/](chrome://extensions/) in the Chrome browser.
 3. Switch on **Developer Mode** that place on the top of right.
-4. Select **Load Unpacked** to upload the **build** folder that created in the first step.
+4. Select **Load Unpacked**, which place on the top of left, to upload the **build** folder that created in the first step.
 5. Congradulation!! You upload our Hippo web wallet successfully for development. 
 
 ## Learn More 
