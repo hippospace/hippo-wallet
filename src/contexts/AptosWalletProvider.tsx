@@ -158,7 +158,7 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
         setWalletNameList(walletList);
       } else if (currentWallet?.toString() && !activeWallet?.address) {
         // login existing account
-        console.log('login >>>', currentWallet?.toString(), activeWallet?.address);
+        // console.log('login >>>', currentWallet?.toString(), activeWallet?.address);
         setActiveAptosWallet(currentWallet?.toString());
       } else if (!currentWallet?.toString() && !activeWallet?.address) {
         setActiveAptosWallet();
