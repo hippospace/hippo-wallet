@@ -60,3 +60,50 @@ export function getLocalStorageNetworkState(): AptosNetwork | null {
   // Get network from local storage by key
   return window.localStorage.getItem(WALLET_STATE_NETWORK_LOCAL_STORAGE_KEY) as AptosNetwork | null;
 }
+
+function connect(account, sendResponse) {
+  // todo: register caller for permission checking purposes
+  getAccountAddress(account, sendResponse);
+}
+
+function disconnect() {
+  // todo: unregister caller
+}
+
+function isConnected(sendResponse) {
+  // todo: send boolean response based on registered caller
+  sendResponse(true);
+}
+
+function getAccountAddress(account, sendResponse) {
+  if (account.address()) {
+    sendResponse({ address: account.address().hex() });
+  } else {
+    sendResponse({ error: 'No accounts signed in' });
+  }
+}
+
+async function signAndSubmitTransaction(client, account, transaction, sendResponse) {
+  try {
+    const signedTransaction = signTransaction(client, account, transaction);
+    const response = await client.submitTransaction(account, signedTransaction);
+    sendResponse(response);
+  } catch (error) {
+    sendResponse({ error });
+  }
+}
+
+async function signTransactionAndSendResponse(client, account, transaction, sendResponse) {
+  try {
+    const signedTransaction = signTransaction(client, account, transaction);
+    sendResponse({ signedTransaction });
+  } catch (error) {
+    sendResponse({ error });
+  }
+}
+
+async function signTransaction(client, account, transaction) {
+  const address = account.address();
+  const txn = await client.generateTransaction(address, transaction);
+  return await client.signTransaction(account, txn);
+}
