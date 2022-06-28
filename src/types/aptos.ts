@@ -18,10 +18,14 @@ export type AptosImportedWalletObject = {
   nonce: string;
 };
 
-export const MessageMethod = Object.freeze({
-  GET_ACCOUNT_ADDRESS: 'getAccountAddress',
-  SIGN_TRANSACTION: 'signTransaction'
-} as const);
+export enum MessageMethod {
+  CONNECT = 'connect',
+  DISCONNECT = 'disconnect',
+  GET_ACCOUNT_ADDRESS = 'getAccountAddress',
+  IS_CONNECTED = 'is_connected',
+  SIGN_AND_SUBMIT_TRANSACTION = 'signAndSubmitTransaction',
+  SIGN_TRANSACTION = 'signTransaction'
+}
 
 export interface GetAccountResourcesProps {
   address?: string;

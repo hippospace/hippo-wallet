@@ -11,3 +11,7 @@ export const walletAddressEllipsis = (address: string) => {
   }
   return address.slice(0, 4) + '...' + address.slice(-6);
 };
+
+export const isExtension = window.location.protocol === 'chrome-extension:';
+
+export const isExtensionPopup = isExtension && window.opener;

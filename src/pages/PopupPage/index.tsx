@@ -14,7 +14,7 @@ import { aptosClient } from 'config/aptosClient';
 import useAptosWallet from 'hooks/useAptosWallet';
 import useHippoClient from 'hooks/useHippoClient';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { walletAddressEllipsis } from 'utils/utility';
+import { isExtension, walletAddressEllipsis } from 'utils/utility';
 import styles from './TransactionModal.module.scss';
 
 interface RequestType {
@@ -29,6 +29,9 @@ interface TProps {
 const AUTHORIZED_METHODS = ['signTransaction', 'signAndSubmit'];
 
 const getInitialRequest = () => {
+  if (!isExtension) {
+    return {} as TransactionPayload;
+  }
   const urlParams = new URLSearchParams(window.location.search);
   const rawRequest = urlParams.get('request');
   if (rawRequest) {
