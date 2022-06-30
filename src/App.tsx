@@ -5,7 +5,6 @@ import PopupPage from 'pages/PopupPage';
 
 const WebWallet: React.FC = () => {
   const { activeWallet } = useAptosWallet();
-
   if (!activeWallet) {
     return <GetStartScreens />;
   }

@@ -22,6 +22,7 @@ import bs58 from 'bs58';
 import { AptosAccount } from 'aptos';
 import { faucetClient } from 'config/aptosClient';
 import { useLocalStorage } from 'hooks/useLocalStorage';
+import { isExtension } from 'utils/utility';
 
 interface AptosWalletContextType {
   activeWallet?: AptosWalletAccount;
@@ -158,7 +159,6 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
         setWalletNameList(walletList);
       } else if (currentWallet?.toString() && !activeWallet?.address) {
         // login existing account
-        // console.log('login >>>', currentWallet?.toString(), activeWallet?.address);
         setActiveAptosWallet(currentWallet?.toString());
       } else if (!currentWallet?.toString() && !activeWallet?.address) {
         setActiveAptosWallet();
@@ -216,6 +216,13 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
     sessionStorage.removeItem(UNLOCKED_CREDENTIAL);
     setCurrentWallet(null);
     window.parent.postMessage({ method: 'disconnected' }, '*');
+    if (isExtension) {
+      chrome.runtime.sendMessage({
+        channel: 'hippo_extension_mnemonic_channel',
+        method: 'set',
+        data: ''
+      });
+    }
   }, [setCurrentWallet]);
 
   return (

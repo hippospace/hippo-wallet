@@ -2,14 +2,28 @@
   "short_name": "Hippo Wallet",
   "name": "Hippo Web Wallet",
   "description": "Hippo Web Wallet on Apots",
-  "icons":{
-    "16":"icon/hippo_logo_16.png",
-    "48":"icon/hippo_logo_48.png",
-    "128":"icon/hippo_logo_128.png"
+  "icons": {
+    "16": "icon/hippo_logo_16.png",
+    "48": "icon/hippo_logo_48.png",
+    "128": "icon/hippo_logo_128.png"
   },
-  "action": {
+  "browser_action": {
     "default_popup": "index.html"
   },
   "version": "1.0",
-  "manifest_version": 3
+  "manifest_version": 2,
+  "background": {
+    "persistent": true,
+    "scripts": ["background.js"]
+  },
+  "permissions": ["storage"],
+  "content_scripts": [
+    {
+      "matches": ["file://*/*", "http://*/*", "https://*/*"],
+      "js": ["contentscript.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+  "web_accessible_resources": ["inpage.js"]
 }

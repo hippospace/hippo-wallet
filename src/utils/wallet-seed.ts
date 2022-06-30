@@ -6,6 +6,7 @@ import * as bip32 from 'bip32';
 import { LOCKED_CREDENTIAL, UNLOCKED_CREDENTIAL } from 'config/aptosConstants';
 import EventEmitter from 'events';
 import { useEffect, useState } from 'react';
+import { isExtension } from './utility';
 
 export const DERIVATION_PATH = {
   deprecated: undefined,
@@ -37,6 +38,23 @@ const deriveImportsEncryptionKey = (seed: string) => {
   return bip32.fromSeed(Buffer.from(seed, 'hex')).derivePath("m/10016'/0").privateKey;
 };
 
+async function getExtensionUnlockedMnemonic() {
+  if (!isExtension) {
+    return null;
+  }
+
+  return new Promise((resolve: (value: string) => void) => {
+    console.log('sendin g chrome message');
+    chrome.runtime.sendMessage(
+      {
+        channel: 'hippo_extension_mnemonic_channel',
+        method: 'get'
+      },
+      resolve
+    );
+  });
+}
+
 const EMPTY_MNEMONIC = {
   mnemonic: null,
   seed: null,
@@ -52,7 +70,8 @@ let unlockedMnemonicAndSeed = (async () => {
     localStorage.removeItem('unlockedExpiration');
   }
   const stored = JSON.parse(
-    sessionStorage.getItem(UNLOCKED_CREDENTIAL) ||
+    (await getExtensionUnlockedMnemonic()) ||
+      sessionStorage.getItem(UNLOCKED_CREDENTIAL) ||
       localStorage.getItem(UNLOCKED_CREDENTIAL) ||
       'null'
   );
@@ -143,6 +162,13 @@ export const storeMnemonicAndSeed = async (
     localStorage.setItem(UNLOCKED_CREDENTIAL, plaintext);
     localStorage.removeItem(LOCKED_CREDENTIAL);
   }
+  if (isExtension) {
+    chrome.runtime.sendMessage({
+      channel: 'hippo_extension_mnemonic_channel',
+      method: 'set',
+      data: plaintext
+    });
+  }
   // sessionStorage.removeItem(UNLOCKED_CREDENTIAL);
   // sessionStorage.setItem(UNLOCKED_CREDENTIAL, plaintext);
 
@@ -176,7 +202,15 @@ export const loadMnemonicAndSeed = async (password: string, stayLoggedIn?: boole
   const decodedPlaintext = Buffer.from(plaintext).toString();
   const { mnemonic, seed, derivationPath } = JSON.parse(decodedPlaintext);
   if (stayLoggedIn) {
-    sessionStorage.setItem(UNLOCKED_CREDENTIAL, decodedPlaintext);
+    if (isExtension) {
+      chrome.runtime.sendMessage({
+        channel: 'hippo_extension_mnemonic_channel',
+        method: 'set',
+        data: decodedPlaintext
+      });
+    } else {
+      sessionStorage.setItem(UNLOCKED_CREDENTIAL, decodedPlaintext);
+    }
   }
   const importsEncryptionKey = deriveImportsEncryptionKey(seed);
   setUnlockedMnemonicAndSeed(mnemonic, seed, importsEncryptionKey, derivationPath);
@@ -223,6 +257,11 @@ export const updateMnemonicAndSeed = async (currentPassword: string, newPassword
   );
   localStorage.removeItem(UNLOCKED_CREDENTIAL);
   sessionStorage.removeItem(UNLOCKED_CREDENTIAL);
+  // chrome.runtime.sendMessage({
+  //   channel: 'hippo_extension_mnemonic_channel',
+  //   method: 'set',
+  //   data: ''
+  // });
 };
 
 export const logoutAccount = () => {
@@ -232,7 +271,7 @@ export const logoutAccount = () => {
 
 export function forgetWallet() {
   localStorage.clear();
-  sessionStorage.removeItem('unlocked');
+  sessionStorage.removeItem(UNLOCKED_CREDENTIAL);
   unlockedMnemonicAndSeed = Promise.resolve({
     mnemonic: null,
     seed: null,
