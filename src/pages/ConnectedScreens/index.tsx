@@ -58,9 +58,9 @@ const ConnectedScreens: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col no-scrollbar">
       <WalletOverview onShowWalletList={showDrawer} />
-      <div className="flex flex-col gap-4 bg-primary px-9 py-6 h-[520px] border-b-2 border-grey-900">
+      <div className="flex flex-col gap-4 bg-primary px-9 py-6 h-[420px] border-b-2 border-grey-900">
         {getModalContent()}
       </div>
       <Menu
