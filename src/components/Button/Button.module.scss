@@ -1,8 +1,7 @@
 .button {
-  @apply cursor-pointer py-3 px-5 font-bold rounded-lg flex items-center justify-center text-center uppercase;
-
+  @apply cursor-pointer py-3 px-5 font-bold rounded-lg flex items-center justify-center text-center uppercase text-lg;
   &.solid {
-    @apply bg-prime text-white border-[3px] border-solid border-primary;
+    @apply bg-primePurple-100 text-primePurple-900 border-[3px] border-solid border-primePurple-100;
 
     &:hover {
       @apply text-grey-900/80 bg-secondary;
@@ -15,8 +14,8 @@
   }
 
   &.outlined {
-    @apply border-[3px] border-grey-900 bg-transparent;
-
+    @apply border-[3px] border-grey-100 bg-transparent;
+    @apply text-grey-100;
     &:hover {
       @apply bg-primePurple-100;
     }
@@ -28,7 +27,7 @@
   }
 
   &:hover {
-    @apply text-grey-900/80;
+    @apply text-grey-100/80;
   }
 
   // &:active,
@@ -37,7 +36,7 @@
   // }
 
   &.disabled {
-    @apply bg-grey-500 pointer-events-none cursor-not-allowed border-[3px] border-solid border-grey-500;
+    @apply bg-grey-500 pointer-events-none cursor-not-allowed border-[3px] border-solid border-grey-500 text-grey-100;
     // background: rgba(255, 255, 255, 0.3);
   }
 

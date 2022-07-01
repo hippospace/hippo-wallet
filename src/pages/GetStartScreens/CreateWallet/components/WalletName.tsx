@@ -17,15 +17,15 @@ const WalletName: React.FC<TProps> = ({ goForward }) => {
   const { errors, values, handleChange, touched, handleBlur } = useFormikContext<FormValues>();
 
   return (
-    <div className="flex flex-col items-left gap-10 w-full">
-      <div className="flex flex-col gap-4">
-        <h4 className="text-grey-900 font-bold">Name Your Wallet</h4>
-        <div className="">Name your wallet to make it unique.</div>
+    <div className="flex flex-col items-left gap-6 w-full">
+      <div className="flex flex-col gap-2">
+        <h5 className="text-grey-100 font-bold">Name Your Wallet</h5>
+        <div className="text-grey-100">Name your wallet to make it unique.</div>
       </div>
       <Form.Item
         {...formItemLayout}
-        className="w-full"
-        label="Name"
+        className="w-full text-lg font-bold"
+        label={<div className="title font-bold text-grey-100">Name</div>}
         validateStatus={errors.walletName && touched.walletName ? 'error' : ''}
         help={errors.walletName && touched.walletName ? errors.walletName : ''}>
         <TextInput
@@ -33,10 +33,11 @@ const WalletName: React.FC<TProps> = ({ goForward }) => {
           value={values.walletName}
           onChange={handleChange}
           onBlur={handleBlur}
+          placeholder="Wallet Name"
         />
       </Form.Item>
       <Button
-        className="w-[430px] mx-auto font-bold mt-40"
+        className="w-[328px] absolute font-bold bottom-4"
         disabled={!values.walletName || !!errors.walletName}
         onClick={goForward}>
         <h6 className="text-inherit">Continue</h6>

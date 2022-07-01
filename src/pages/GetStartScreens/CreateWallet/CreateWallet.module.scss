@@ -6,7 +6,7 @@
       .ant-steps-item-container {
         .ant-steps-item-icon {
           .indicator {
-            @apply bg-grey-900;
+            @apply bg-primePurple-300;
           }
         }
       }
@@ -19,11 +19,11 @@
         .ant-steps-item-icon {
           @apply mt-0 ml-0;
           .indicator {
-            @apply bg-grey-500;
+            @apply bg-grey-100;
           }
         }
         .ant-steps-item-tail,
-        ant-steps-item-content {
+        .ant-steps-item-content {
           @apply hidden;
         }
       }
@@ -34,3 +34,4 @@
     }
   }
 }
+

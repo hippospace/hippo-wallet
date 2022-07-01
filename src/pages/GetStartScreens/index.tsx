@@ -27,15 +27,15 @@ const GetStartScreens: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col items-center px-2 py-10">
-      <LogoIcon className="mt-8 w-[120px] h-[120px]" />
-      <div className="mt-20 flex flex-col items-center text-center gap-4">
-        <h4 className="text-grey-900 font-bold">Hippo Web Wallet</h4>
-        <div className="text-grey-900">
+    <div className="flex flex-col items-center px-6 pt-10">
+      <LogoIcon className="mt-8 w-[96px] h-[96px]" />
+      <div className="mt-10 flex flex-col items-center text-center gap-4">
+        <h4 className="text-grey-100 font-bold">Hippo Web Wallet</h4>
+        <div className="text-grey-100">
           To get started, create a new wallet or use one you already have.
         </div>
       </div>
-      <div className="mt-[120px] flex flex-col items-center text-center gap-7 w-full px-4">
+      <div className="flex flex-col items-center text-center gap-4 w-[328px] absolute bottom-4">
         <Button className="w-full font-bold" onClick={() => setPage('createWallet')}>
           Create wallet
         </Button>
