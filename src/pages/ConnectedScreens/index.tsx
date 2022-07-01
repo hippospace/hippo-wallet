@@ -15,11 +15,11 @@ import ImportWallet from './ImportWallet';
 const items: MenuProps['items'] = [
   {
     key: 'coinList',
-    icon: <CoinListIcon className="fill-black" />
+    icon: <CoinListIcon />
   },
   {
     key: 'faucet',
-    icon: <FaucetIcon className="fill-black" />
+    icon: <FaucetIcon />
   },
   {
     key: 'settings',
@@ -60,18 +60,18 @@ const ConnectedScreens: React.FC = () => {
   return (
     <div className="flex flex-col">
       <WalletOverview onShowWalletList={showDrawer} />
-      <div className="flex flex-col gap-4 bg-primary px-9 py-6 h-[520px] border-b-2 border-grey-900">
-        {getModalContent()}
+      <div className="flex flex-col gap-4 px-6 no-scrollbar">{getModalContent()}</div>
+      <div className="absolute bottom-0 w-full border-t-2 border-grey-100 bg-primePurple-900">
+        <Menu
+          mode="horizontal"
+          theme="dark"
+          overflowedIndicator={null}
+          className={styles.menu}
+          onClick={onClick}
+          selectedKeys={[current]}
+          items={items}
+        />
       </div>
-      <Menu
-        mode="horizontal"
-        theme="dark"
-        overflowedIndicator={null}
-        className={styles.menu}
-        onClick={onClick}
-        selectedKeys={[current]}
-        items={items}
-      />
       <Drawer
         title={
           <div className="flex w-full justify-between items-center">

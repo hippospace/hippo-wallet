@@ -25,6 +25,12 @@
     //   @apply text-grey-900/100 bg-prime;
     // }
   }
+  &.list{
+    @apply border-[3px] border-grey-900 bg-transparent text-grey-900 font-bold text-[10px];
+    &:hover {
+      @apply text-grey-900;
+    }
+  }
 
   &:hover {
     @apply text-grey-100/80;
