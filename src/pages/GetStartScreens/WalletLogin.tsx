@@ -48,10 +48,10 @@ const WalletLogin: React.FC<TProps> = ({ onRecoverPassword }) => {
   });
 
   return (
-    <form className="flex flex-col items-center px-9 py-10" onSubmit={formik.handleSubmit}>
-      <LogoIcon className="mt-8 w-[120px] h-[120px]" />
-      <div className="mt-10 flex flex-col items-center text-center gap-8 w-full">
-        <h4 className="text-grey-900 font-bold">Enter Your Password</h4>
+    <form className="flex flex-col items-center px-6 pt-10" onSubmit={formik.handleSubmit}>
+      <LogoIcon className="mt-8 w-[96px] h-[96px]" />
+      <div className="mt-10 flex flex-col items-center text-center gap-4">
+        <h4 className="text-grey-100 font-bold">Enter Your Password</h4>
         <div className="flex flex-col w-full items-start">
           <Form.Item
             {...formItemLayout}
@@ -72,12 +72,14 @@ const WalletLogin: React.FC<TProps> = ({ onRecoverPassword }) => {
             <div className="text-grey-900">Keep wallet unlocked</div>
           </CheckboxInput> */}
         </div>
-        <div className="w-full px-8 pt-20">
+        <div className="w-full pt-20">
           <Button type="submit" className="w-full font-bold" isLoading={formik.isSubmitting}>
             <h6 className="text-inherit">Unlock</h6>
           </Button>
         </div>
-        <div className="text-grey-900 font-bold cursor-pointer" onClick={onRecoverPassword}>
+        <div
+          className="text-grey-100 text-base font-bold cursor-pointer"
+          onClick={onRecoverPassword}>
           Recover your master password
         </div>
       </div>

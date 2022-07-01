@@ -29,9 +29,7 @@ const Faucet: React.FC = () => {
           const store = tokenStores[symbol];
           const tokenInfo = tokenInfos[symbol];
           return (
-            <div
-              className="border-2 h-14 border-grey-900 py-2 px-6 flex bg-primePurple-100 justify-between items-center"
-              key={symbol}>
+            <div className="py-2 px-3.5 flex bg-grey-100 justify-between h-[56px]" key={symbol}>
               <div className="flex gap-3 justify-center items-center">
                 <CoinIcon logoSrc={tokenInfo.logo_url} />
                 <div className="font-bold text-grey-900">{tokenInfo.name}</div>
@@ -42,8 +40,9 @@ const Faucet: React.FC = () => {
                   ${symbol}`}{' '}
                 </small>
                 <Button
+                  variant="list"
                   isLoading={loading === symbol}
-                  className="font-bold p-0 px-2"
+                  className="px-3.5 py-1"
                   onClick={() => onRequestFaucet(symbol)}>
                   Faucet
                 </Button>
@@ -55,7 +54,7 @@ const Faucet: React.FC = () => {
   }, [tokenInfos, tokenStores, loading, onRequestFaucet]);
 
   return (
-    <div className="">
+    <div className="overflow-y-scroll no-scrollbar pt-6">
       <div className="flex flex-col gap-4">{renderTokenList}</div>
     </div>
   );

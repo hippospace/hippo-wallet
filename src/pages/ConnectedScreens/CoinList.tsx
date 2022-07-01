@@ -11,19 +11,17 @@ const CoinList: React.FC = () => {
         const store = tokenStores[symbol];
         const tokenInfo = tokenInfos[symbol];
         return (
-          <div
-            className="border-2 border-grey-900 py-2 px-6 flex bg-primePurple-100 justify-between h-[56px]"
-            key={symbol}>
+          <div className="py-2 px-3.5 flex bg-grey-100 justify-between h-[56px]" key={symbol}>
             <div className="flex gap-3 justify-center items-center">
               <CoinIcon logoSrc={tokenInfo.logo_url} />
               <div className="flex flex-col">
-                <div className="font-bold text-grey-900">{tokenInfo.name}</div>
+                <div className="font-bold text-grey-900 text-xl">{tokenInfo.name}</div>
                 <small className="font-bold text-grey-500">{tokenInfo.symbol}</small>
               </div>
             </div>
-            <h5 className="font-bold text-grey-900">
+            <h6 className="font-bold text-grey-900 leading-10">
               {store.coin.value.toJSNumber() / Math.pow(10, tokenInfo.decimals)}
-            </h5>
+            </h6>
           </div>
         );
       });
@@ -31,10 +29,8 @@ const CoinList: React.FC = () => {
   }, [tokenInfos, tokenStores]);
 
   return (
-    <div className="">
-      <div className="flex flex-col gap-4 overflow-y-scroll no-scrollbar h-[480px]">
-        {renderTokenList}
-      </div>
+    <div className="overflow-y-scroll no-scrollbar pt-6">
+      <div className="flex flex-col gap-4">{renderTokenList}</div>
     </div>
   );
 };

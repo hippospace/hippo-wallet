@@ -42,11 +42,11 @@ const WalletOverview: React.FC<TProps> = ({ onShowWalletList }) => {
   };
 
   return (
-    <div className="flex py-4 px-6 border-b-2 border-grey-900 items-center justify-between">
+    <div className="flex py-4 px-6 h-[64px] border-b-2 border-grey-100 items-center justify-between">
       <SwapIcon className="rotate-90 cursor-pointer" onClick={onShowWalletList} />
-      <div className="flex flex-col gap-4 items-center">
+      <div className="flex flex-row gap-1 items-baseline">
         <div className="flex gap-2 items-center">
-          <h3 className="text-primary font-bold">{walletName}</h3>
+          <h3 className="text-grey-100 text-2xl font-bold">{walletName}</h3>
         </div>
         {credentials.map(({ text, key }) => (
           <div className="flex gap-2 justify-between" key={key}>
@@ -54,8 +54,8 @@ const WalletOverview: React.FC<TProps> = ({ onShowWalletList }) => {
               {copied[key as any] ? (
                 <small className="text-green-500">Copied!</small>
               ) : (
-                <div className="title text-grey-700 cursor-pointer flex gap-2">
-                  <div>({text.slice(0, 4) + '....' + text.slice(-6)})</div>
+                <div className="title text-grey-300 cursor-pointer flex gap-1">
+                  <div className="text-[14px]">({text.slice(0, 3) + '...' + text.slice(-3)})</div>
                   <CopyIcon />
                 </div>
               )}

@@ -3,7 +3,7 @@ import { Formik } from 'formik';
 import usePage from 'hooks/usePage';
 import { useMemo, useState } from 'react';
 import cx from 'classnames';
-import { CloseIcon, LeftCircleIcon } from 'resources/icons';
+import { LeftCircleIcon } from 'resources/icons';
 import * as yup from 'yup';
 import { FormValues } from './types';
 import styles from './RestoreWallet.module.scss';
@@ -84,8 +84,8 @@ const RestoreWallet: React.FC = () => {
       validationSchema={RestoreWalletSchema}
       onSubmit={handleRestoreAccount}>
       <div className="flex flex-col">
-        <div className="flex py-4 px-6 border-b-2 border-grey-900 items-center justify-between">
-          <div className="p-2 cursor-pointer" onClick={onGoBackward}>
+        <div className="flex py-4 px-6 border-b-2 border-grey-100 items-center justify-between">
+          <div className="cursor-pointer" onClick={onGoBackward}>
             <LeftCircleIcon />
           </div>
           <Steps
@@ -99,11 +99,8 @@ const RestoreWallet: React.FC = () => {
               <Steps.Step key={item.title} />
             ))}
           </Steps>
-          <div className="p-2 cursor-pointer" onClick={() => setPage('')}>
-            <CloseIcon className="cursor-pointer" />
-          </div>
         </div>
-        <div className="py-5 px-8">{steps[current].content}</div>
+        <div className="pt-6 px-6">{steps[current].content}</div>
       </div>
     </Formik>
   );

@@ -35,44 +35,45 @@ const SeedWordsForm: React.FC<TProps> = ({ goForward }) => {
   const renderMnemonicList = useMemo(() => {
     const list = mnemonicAndSeed?.mnemonic.split(' ');
     return list?.map((word, index) => (
-      <div className="flex border-2 border-grey-900 rounded-xl flex-grow" key={word}>
-        <div className="py-2 px-2 w-10 text-center">{index + 1}.</div>
-        <div className="w-[2px] h-full bg-grey-900" />
-        <div className="py-2 px-2 w-[119px] flex-grow">{word}</div>
+      <div
+        className="flex basis-[104px] border-2 border-grey-100 bg-grey-100 rounded-xl flex-grow"
+        key={word}>
+        <div className="py-2 pl-2 pr-1 text-[15px]">{index + 1}.</div>
+        <div className="py-2">{word}</div>
       </div>
     ));
   }, [mnemonicAndSeed?.mnemonic]);
   return (
     <div>
-      <h4 className="font-bold text-grey-900 mb-4">Back Up Your Secret Phrase</h4>
-      <div className="text-grey-900">
+      <h5 className="font-bold text-grey-100 mb-2">Back Up Your Secret Phrase</h5>
+      <div className="text-grey-100">
         Save these 12 words to a password manager, or write it down and store in a secure place. Do
         not share with anyone.
       </div>
-      <div className="flex flex-wrap gap-4 py-10 justify-center">{renderMnemonicList}</div>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-wrap gap-x-2 gap-y-2 py-4 justify-center">{renderMnemonicList}</div>
+      <div className="flex flex-col gap-2">
         <CopyToClipboard
           text={mnemonicAndSeed?.mnemonic || ''}
           onCopy={() => {
             handleOnClickCopy();
             setFieldValue('copied', true);
           }}>
-          <Button className="font-bold">
-            <div className="text-inherit">
-              {copied ? 'Succesfully Copied' : 'Copy Backup Mnemonic File (Required)'}
+          <Button className="font-bold py-2">
+            <div className="text-sm">
+              {copied ? 'Succesfully Copied' : 'Copy to clipboard (Required)'}
             </div>
           </Button>
         </CopyToClipboard>
         <CheckboxInput
           checked={values.understood}
           onChange={(e) => setFieldValue('understood', e.target.checked)}>
-          <div className="helpText text-grey-900">
+          <div className="helpText text-grey-100">
             I understand that if I lose my secret phrase, I’ll lose all of the crypto in my wallet.
           </div>
         </CheckboxInput>
       </div>
       <Button
-        className="w-[430px] mx-auto mt-10"
+        className="w-[328px] absolute bottom-4"
         disabled={!values.copied || !values.understood}
         onClick={goForward}>
         Continue

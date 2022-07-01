@@ -1,7 +1,19 @@
 .drawer {
   :global {
+    .bg-image{
+      background-image: url("../../../resources/img/wallet_bg.png");
+    }
     .ant-drawer-content-wrapper {
       height: 100vh !important;
+    }
+    .ant-form-item {
+      @apply mb-0;
+      .ant-form-item-label{
+        @apply p-0;
+        label{
+          @apply text-grey-100 font-bold;
+        }
+      }
     }
   }
 }

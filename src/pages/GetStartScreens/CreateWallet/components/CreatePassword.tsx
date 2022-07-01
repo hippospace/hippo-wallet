@@ -27,24 +27,26 @@ const CreatePassword: React.FC = () => {
   } = useFormikContext<FormValues>();
 
   return (
-    <div className="flex flex-col items-left gap-10 w-full">
-      <div className="flex flex-col gap-4">
-        <h4 className="text-grey-900 font-bold">Create Your Password</h4>
-        <div className="">
+    <div className="flex flex-col items-left gap-6 w-full">
+      <div className="flex flex-col gap-2">
+        <h5 className="text-grey-100 font-bold">Create Your Password</h5>
+        <div className="text-grey-100">
           Set up a password to unlock your wallet each time when you use your wallet. It can’t be
           used for recover your wallet
         </div>
       </div>
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-2">
         <Form.Item
           {...formItemLayout}
           className="w-full"
-          label={<div className="title font-bold text-grey-900">Password</div>}
+          label={<div className="title font-bold text-grey-100">Password</div>}
           validateStatus={errors.password && touched.password ? 'error' : ''}
           help={
-            errors.password && touched.password
-              ? errors.password
-              : 'At least 8 charaters, with at least 1 number and a special charater'
+            <div className="text-grey-100">
+              {errors.password && touched.password
+                ? errors.password
+                : 'At least 8 charaters, with at least 1 number and a special charater'}
+            </div>
           }>
           <TextInput
             type="password"
@@ -54,38 +56,40 @@ const CreatePassword: React.FC = () => {
             onChange={handleChange}
           />
         </Form.Item>
-        <Form.Item
-          {...formItemLayout}
-          className="w-full"
-          label={<div className="title font-bold text-grey-900">Verify Password</div>}
-          validateStatus={errors.confirmPassword && touched.confirmPassword ? 'error' : ''}
-          help={errors.confirmPassword && touched.confirmPassword ? errors.confirmPassword : ''}>
-          <TextInput
-            name="confirmPassword"
-            type="password"
-            onBlur={handleBlur}
-            value={values.confirmPassword}
-            onChange={handleChange}
-          />
-        </Form.Item>
-      </div>
-      <CheckboxInput
-        checked={values.agree}
-        onChange={(e) => setFieldValue('agree', e.target.checked)}>
-        <div className="text-grey-900">
-          I agree to <TextLink href="">the terms</TextLink> and{' '}
-          <TextLink href="">privacy policy</TextLink>
+        <div>
+          <Form.Item
+            {...formItemLayout}
+            className="w-full"
+            label={<div className="title font-bold text-grey-100">Verify Password</div>}
+            validateStatus={errors.confirmPassword && touched.confirmPassword ? 'error' : ''}
+            help={errors.confirmPassword && touched.confirmPassword ? errors.confirmPassword : ''}>
+            <TextInput
+              name="confirmPassword"
+              type="password"
+              onBlur={handleBlur}
+              value={values.confirmPassword}
+              onChange={handleChange}
+            />
+          </Form.Item>
+          <CheckboxInput
+            checked={values.agree}
+            onChange={(e) => setFieldValue('agree', e.target.checked)}>
+            <div className="text-grey-100">
+              I agree to <TextLink href="">the terms</TextLink> and{' '}
+              <TextLink href="">privacy policy</TextLink>
+            </div>
+          </CheckboxInput>
         </div>
-      </CheckboxInput>
+      </div>
       <Button
         isLoading={isSubmitting || loading}
         onClick={() => {
           setLoading(true);
           submitForm();
         }}
-        className="w-[430px] mx-auto font-bold"
+        className="w-[328px] absolute bottom-4 font-bold"
         disabled={!isValid}>
-        <h6 className="text-inherit">Create Account</h6>
+        <h6 className="text-inherit">Create Wallet</h6>
       </Button>
     </div>
   );

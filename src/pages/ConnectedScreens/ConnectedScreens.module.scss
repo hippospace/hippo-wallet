@@ -1,14 +1,13 @@
 .menu {
   &:global {
     &.ant-menu.ant-menu-dark {
-      @apply bg-secondary rounded-[11px];
-
+      @apply bg-transparent;
       .ant-menu-item:not(:last-child) {
         @apply flex-grow flex justify-center items-center h-16 opacity-100;
 
         svg,
         path {
-          @apply fill-primary;
+          @apply fill-grey-500;
         }
       }
     }
@@ -20,10 +19,10 @@
       background: transparent;
       svg,
       path {
-        @apply fill-primePurple-900;
+        @apply fill-primePurple-100;
       }
       a {
-        @apply text-grey-900;
+        @apply text-grey-100;
       }
     }
   }

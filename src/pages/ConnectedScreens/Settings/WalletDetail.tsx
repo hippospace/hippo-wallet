@@ -74,11 +74,11 @@ const WalletDetail: React.FC<TProps> = ({ onSuccess }) => {
   });
 
   return (
-    <form className="flex flex-col items-center w-full gap-10" onSubmit={formik.handleSubmit}>
-      <div className="flex flex-col gap-2 items-center">
-        <h3 className="text-grey-900 font-bold">Wallet Management</h3>
+    <form className="flex flex-col w-full gap-6" onSubmit={formik.handleSubmit}>
+      <div className="flex flex-col">
+        <h5 className="text-grey-100 font-bold">Wallet Management</h5>
       </div>
-      <div className="mt-2 flex flex-col items-center text-center gap-3 w-full">
+      <div className="flex flex-col text-center gap-2 w-full">
         <Form.Item
           {...formItemLayout}
           className="w-full"
@@ -118,11 +118,11 @@ const WalletDetail: React.FC<TProps> = ({ onSuccess }) => {
             }
           />
         </Form.Item>
-        <div className="flex w-full justify-between mt-20">
-          <Button variant="outlined" className="w-[230px] font-bold" onClick={onSuccess}>
+        <div className="flex w-[328px] justify-between absolute bottom-4">
+          <Button variant="outlined" className="w-[140px] font-bold" onClick={onSuccess}>
             Cancel
           </Button>
-          <Button type="submit" className="w-[230px] font-bold" disabled={!formik.dirty}>
+          <Button type="submit" className="w-[140px] font-bold" disabled={!formik.dirty}>
             Update
           </Button>
         </div>

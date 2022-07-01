@@ -19,13 +19,14 @@ const SeedWordsForm: React.FC<TProps> = ({ goForward }) => {
 
   const renderMnemonicList = useMemo(() => {
     return Object.keys(values.mnemonic).map((key) => (
-      <div className="flex border-2 border-grey-900 rounded-xl flex-grow" key={key}>
-        <div className="py-2 px-2 w-10 text-center">{key}.</div>
-        <div className="w-[2px] h-full bg-grey-900" />
-        <div className="py-2 px-2 w-[119px] flex-grow">
+      <div
+        className="flex basis-[104px] border-2 border-grey-100 bg-grey-100 rounded-xl flex-grow"
+        key={key}>
+        <div className="py-2 pl-2 pr-1 text-[15px]]">{key}.</div>
+        <div className="py-2">
           <input
             name={key}
-            className="w-full"
+            className="w-full bg-grey-100"
             value={values.mnemonic[parseInt(key)]}
             onChange={(e) =>
               setFieldValue('mnemonic', { ...values.mnemonic, [key]: e.target.value })
@@ -53,14 +54,14 @@ const SeedWordsForm: React.FC<TProps> = ({ goForward }) => {
 
   return (
     <div>
-      <h4 className="font-bold text-grey-900 mb-4">Back Up Your Secret Phrase</h4>
-      <div className="text-grey-900">
+      <h4 className="font-bold text-grey-100 mb-2">Back Up Your Secret Phrase</h4>
+      <div className="text-grey-100">
         Save these 12 words to a password manager, or write it down and store in a secure place. Do
         not share with anyone.
       </div>
-      <div className="flex flex-wrap gap-4 py-10 justify-center">{renderMnemonicList}</div>
+      <div className="flex flex-wrap gap-x-2 gap-y-2 py-4 justify-center">{renderMnemonicList}</div>
       <Button
-        className="w-[430px] mx-auto mt-10"
+        className="w-[328px] absolute bottom-4"
         disabled={!mnemonicInput || mnemonicInput.length !== 12}
         onClick={onNext}>
         Continue
