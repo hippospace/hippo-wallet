@@ -55,12 +55,12 @@ const ChangePassword: React.FC<TProps> = ({ onSuccess }) => {
   });
 
   return (
-    <form className="flex flex-col items-center w-full gap-10" onSubmit={formik.handleSubmit}>
+    <form className="flex flex-col items-center w-full gap-6" onSubmit={formik.handleSubmit}>
       <div className="flex flex-col gap-2 items-center">
         <LockIcon />
-        <h3 className="text-grey-900 font-bold">Change Password</h3>
+        <h5 className="text-grey-100 font-bold">Change Password</h5>
       </div>
-      <div className="mt-2 flex flex-col items-center text-center gap-3 w-full">
+      <div className="mt-2 flex flex-col items-center text-center gap-2 w-full">
         <Form.Item
           {...formItemLayout}
           className="w-full"
@@ -115,11 +115,11 @@ const ChangePassword: React.FC<TProps> = ({ onSuccess }) => {
             onChange={formik.handleChange}
           />
         </Form.Item>
-        <div className="flex w-full justify-between mt-20">
-          <Button variant="outlined" className="w-[230px] font-bold" onClick={onSuccess}>
+        <div className="flex w-[328px] justify-between absolute bottom-4">
+          <Button variant="outlined" className="w-[140px] font-bold" onClick={onSuccess}>
             Cancel
           </Button>
-          <Button type="submit" className="w-[230px] font-bold">
+          <Button type="submit" className="w-[140px] font-bold">
             Update
           </Button>
         </div>

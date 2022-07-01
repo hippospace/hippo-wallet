@@ -126,21 +126,21 @@ const PopupPage: React.FC<TProps> = ({ opener }) => {
         'Expire At:': new Date(parseInt(expiration_timestamp_secs) * 1000).toLocaleString()
       };
       return (
-        <div className="bg-primary rounded-xl p-4 w-full">
+        <div className="bg-primary rounded-xl p-2 w-full">
           <div className="w-full flex justify-between">
-            <div className="font-bold text-grey-900">Contract Address</div>
-            <div className="font-bold text-grey-900">{walletAddressEllipsis(address)}</div>
+            <div className="font-bold text-grey-100">Contract Address</div>
+            <div className="font-bold text-grey-100">{walletAddressEllipsis(address)}</div>
           </div>
           <div className="w-full flex justify-between">
-            <div className="font-bold text-grey-900">Contract Method</div>
-            <div className="font-bold text-grey-900">
+            <div className="font-bold text-grey-100">Contract Method</div>
+            <div className="font-bold text-grey-100">
               {moduleName}::{functionName}
             </div>
           </div>
           <Collapse defaultActiveKey={['1']} ghost expandIconPosition="end">
             <Collapse.Panel
               className={styles.collapse}
-              header={<div className="font-bold text-grey-900">Details</div>}
+              header={<div className="font-bold text-grey-100">Details</div>}
               key="1">
               {Object.keys(transactionInfo).map((key) => (
                 <div key={key} className="w-full flex justify-between">

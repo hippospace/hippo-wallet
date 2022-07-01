@@ -38,7 +38,7 @@ const SeedWordsForm: React.FC<TProps> = ({ goForward }) => {
       <div
         className="flex basis-[104px] border-2 border-grey-100 bg-grey-100 rounded-xl flex-grow"
         key={word}>
-        <div className="py-2 pl-2 px-1 text-[15px]">{index + 1}.</div>
+        <div className="py-2 pl-2 pr-1 text-[15px]">{index + 1}.</div>
         <div className="py-2">{word}</div>
       </div>
     ));

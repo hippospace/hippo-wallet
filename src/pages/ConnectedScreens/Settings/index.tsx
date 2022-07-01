@@ -62,8 +62,8 @@ const Settings: React.FC = () => {
         visible={!!screen}
         getContainer={false}
         style={{ position: 'absolute' }}>
-        <div className="absolute inset-0 bg-secondary z-10 py-16 px-8">
-          <div onClick={onBackToSetting} className="absolute right-12 top-9 cursor-pointer">
+        <div className="absolute inset-0 bg-image z-10 py-16 px-6">
+          <div onClick={onBackToSetting} className="absolute right-6 top-9 cursor-pointer">
             <CloseIcon />
           </div>
           {renderContent}
