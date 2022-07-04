@@ -6,7 +6,7 @@ import Faucet from './Faucet';
 import Settings from './Settings';
 import WalletOverview from './WalletOverview';
 import styles from './ConnectedScreens.module.scss';
-import { CloseIcon, CoinListIcon, FaucetIcon, SettingIcon } from 'resources/icons';
+import { CloseIcon, CoinListIcon, FaucetIcon, SettingIcon, SwapTabIcon } from 'resources/icons';
 import LogoIcon from 'components/LogoIcon';
 import WalletList from './WalletList';
 import AddNewWallet from './AddNewWallet';
@@ -14,11 +14,16 @@ import ImportWallet from './ImportWallet';
 import useAptosWallet from 'hooks/useAptosWallet';
 import useHippoClient from 'hooks/useHippoClient';
 import { LoadingOutlined } from '@ant-design/icons';
+import Swap from '../Swap';
 
 const items: MenuProps['items'] = [
   {
     key: 'coinList',
     icon: <CoinListIcon />
+  },
+  {
+    key: 'swap',
+    icon: <SwapTabIcon />
   },
   {
     key: 'faucet',
@@ -77,6 +82,8 @@ const ConnectedScreens: React.FC = () => {
     switch (current) {
       case 'coinList':
         return <CoinList />;
+      case 'swap':
+        return <Swap />;
       case 'faucet':
         return <Faucet />;
       case 'settings':
@@ -87,9 +94,13 @@ const ConnectedScreens: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col no-scrollbar">
+    <div id="page-index" className="flex flex-col no-scrollbar h-full relative !w-full">
       <WalletOverview onShowWalletList={showDrawer} />
-      <div className="flex flex-col gap-4 px-6 no-scrollbar">{getModalContent()}</div>
+      <div
+        id="tab-container"
+        className="flex flex-col gap-4 px-6 no-scrollbar h-full pb-[66px] relative !w-full">
+        {getModalContent()}
+      </div>
       <div className="absolute bottom-0 w-full border-t-2 border-grey-100 bg-primePurple-900">
         <Menu
           mode="horizontal"
