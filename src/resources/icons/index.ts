@@ -22,3 +22,6 @@ export { ReactComponent as FaucetIcon } from './faucet.svg';
 export { ReactComponent as LockIcon } from './lock.svg';
 export { ReactComponent as CheckIcon } from './check.svg';
 export { ReactComponent as LeftCircleIcon } from './leftCircle.svg';
+export { ReactComponent as SwapTabIcon } from './swapTab.svg';
+export { ReactComponent as Switch } from './switch.svg';
+export { ReactComponent as SettingGear } from './settingGear.svg';

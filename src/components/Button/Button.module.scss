@@ -32,6 +32,13 @@
     }
   }
 
+  &.icon {
+    @apply border-none p-0 w-fit h-fit;
+    &:hover {
+      @apply opacity-60;
+    }
+  }
+
   &:hover {
     @apply text-grey-100/80;
   }
@@ -48,5 +55,14 @@
 
   &.loading {
     @apply flex items-center pointer-events-none cursor-not-allowed;
+  }
+
+  &.selected {
+    @apply bg-primePurple-100 text-primePurple-900 border-[3px] border-solid border-primePurple-100;
+  }
+
+  &.notSelected {
+    @apply border-[3px] border-grey-500 bg-transparent;
+    @apply text-grey-900;
   }
 }
