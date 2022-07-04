@@ -22,7 +22,12 @@ interface HippoClientContextType {
   tokenStores?: Record<string, aptos_framework.coin$_.CoinStore>;
   tokenInfos?: Record<string, coin_registry$_.TokenInfo>;
   requestFaucet: (symbol: string, uiAmount: string) => {};
-  requestSwap: (fromSymbol: string, toSymbol: string, uiAmtIn: number, uiAmtOutMin: number) => {};
+  requestSwap: (
+    fromSymbol: string,
+    toSymbol: string,
+    uiAmtIn: number,
+    uiAmtOutMin: number
+  ) => Promise<void>;
   requestDeposit: (
     lhsSymbol: string,
     rhsSymbol: string,
@@ -153,10 +158,10 @@ const HippoClientProvider: FC<TProviderProps> = ({ children }) => {
         const transactionInfo = { [fromSymbol]: uiAmtIn, [toSymbol]: uiAmtOutMin };
         if (payload) {
           setTransaction({ type: 'swap', payload, transactionInfo });
-          // await sendPayloadTx(aptosClient, activeWallet.aptosAccount, payload);
-          // await hippoWallet?.refreshStores();
-          // setRefresh(true);
-          // message.success('Swap successfully');
+          await sendPayloadTx(aptosClient, activeWallet.aptosAccount, payload);
+          await hippoWallet?.refreshStores();
+          setRefresh(true);
+          message.success('Swap successfully');
         }
       } catch (error) {
         console.log('request swap error:', error);

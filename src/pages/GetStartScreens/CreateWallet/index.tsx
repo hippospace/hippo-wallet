@@ -83,7 +83,7 @@ const CreateWallet: React.FC = () => {
       initialValues={initialValues}
       validationSchema={CreateWalletSchema}
       onSubmit={handleCreateAccount}>
-      <div className="flex flex-col">
+      <div className="flex flex-col h-full">
         <div className="flex py-4 px-6 border-b-2 border-grey-100 items-center justify-between">
           <div className="cursor-pointer" onClick={onGoBackward}>
             <LeftCircleIcon />
@@ -100,7 +100,7 @@ const CreateWallet: React.FC = () => {
             ))}
           </Steps>
         </div>
-        <div className="pt-6 px-6">{steps[current].content}</div>
+        <div className="pt-4 px-4 flex-grow overflow-auto">{steps[current].content}</div>
       </div>
     </Formik>
   );

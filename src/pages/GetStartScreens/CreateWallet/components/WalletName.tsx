@@ -17,7 +17,7 @@ const WalletName: React.FC<TProps> = ({ goForward }) => {
   const { errors, values, handleChange, touched, handleBlur } = useFormikContext<FormValues>();
 
   return (
-    <div className="flex flex-col items-left gap-6 w-full">
+    <div className="flex flex-col items-left gap-6 w-full h-full relative">
       <div className="flex flex-col gap-2">
         <h5 className="text-grey-100 font-bold">Name Your Wallet</h5>
         <div className="text-grey-100">Name your wallet to make it unique.</div>
@@ -37,7 +37,7 @@ const WalletName: React.FC<TProps> = ({ goForward }) => {
         />
       </Form.Item>
       <Button
-        className="w-[328px] absolute font-bold bottom-4"
+        className="w-full absolute font-bold bottom-4"
         disabled={!values.walletName || !!errors.walletName}
         onClick={goForward}>
         <h6 className="text-inherit">Continue</h6>

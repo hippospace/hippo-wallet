@@ -27,7 +27,7 @@ const CreatePassword: React.FC = () => {
   } = useFormikContext<FormValues>();
 
   return (
-    <div className="flex flex-col items-left gap-6 w-full">
+    <div className="flex flex-col items-left gap-6 w-full h-full relative">
       <div className="flex flex-col gap-2">
         <h5 className="text-grey-100 font-bold">Create Your Password</h5>
         <div className="text-grey-100">
@@ -87,7 +87,7 @@ const CreatePassword: React.FC = () => {
           setLoading(true);
           submitForm();
         }}
-        className="w-[328px] absolute bottom-4 font-bold"
+        className="w-full absolute bottom-4 font-bold"
         disabled={!isValid}>
         <h6 className="text-inherit">Create Wallet</h6>
       </Button>

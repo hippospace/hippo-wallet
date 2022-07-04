@@ -36,21 +36,23 @@ const SeedWordsForm: React.FC<TProps> = ({ goForward }) => {
     const list = mnemonicAndSeed?.mnemonic.split(' ');
     return list?.map((word, index) => (
       <div
-        className="flex basis-[104px] border-2 border-grey-100 bg-grey-100 rounded-xl flex-grow"
-        key={word}>
-        <div className="py-2 pl-2 pr-1 text-[15px]">{index + 1}.</div>
-        <div className="py-2">{word}</div>
+        key={word}
+        className="flex-grow w-1/3 px-1 [&:nth-child(3n)]:pr-0 [&:nth-child(3n+1)]:pl-0">
+        <div className="flex border-2 border-grey-100 bg-grey-100 rounded-xl" key={word}>
+          <div className="py-2 pl-2 pr-1 text-[15px]">{index + 1}.</div>
+          <div className="py-2 break-all">{word}</div>
+        </div>
       </div>
     ));
   }, [mnemonicAndSeed?.mnemonic]);
   return (
-    <div>
+    <div className="flex flex-col h-full">
       <h5 className="font-bold text-grey-100 mb-2">Back Up Your Secret Phrase</h5>
       <div className="text-grey-100">
         Save these 12 words to a password manager, or write it down and store in a secure place. Do
         not share with anyone.
       </div>
-      <div className="flex flex-wrap gap-x-2 gap-y-2 py-4 justify-center">{renderMnemonicList}</div>
+      <div className="flex flex-wrap gap-y-2 py-4 justify-center">{renderMnemonicList}</div>
       <div className="flex flex-col gap-2">
         <CopyToClipboard
           text={mnemonicAndSeed?.mnemonic || ''}
@@ -72,12 +74,14 @@ const SeedWordsForm: React.FC<TProps> = ({ goForward }) => {
           </div>
         </CheckboxInput>
       </div>
-      <Button
-        className="w-[328px] absolute bottom-4"
-        disabled={!values.copied || !values.understood}
-        onClick={goForward}>
-        Continue
-      </Button>
+      <div className="py-4 mt-auto">
+        <Button
+          className="w-full"
+          disabled={!values.copied || !values.understood}
+          onClick={goForward}>
+          Continue
+        </Button>
+      </div>
     </div>
   );
 };

@@ -1,0 +1,17 @@
+.actionSheet {
+  :global {
+    .ant-drawer-header {
+      @apply bg-primePurple-900 border-b-2 border-b-grey-300;
+      .ant-drawer-title {
+        @apply h6 font-bold text-grey-100;
+      }
+    }
+    .ant-drawer-body {
+      @apply bg-primePurple-900 pt-4;
+    }
+    .ant-drawer-footer {
+      @apply bg-primePurple-900;
+      border: none;
+    }
+  }
+}
