@@ -21,7 +21,12 @@ interface HippoClientContextType {
   tokenStores?: Record<string, X0x1.Coin.CoinStore>;
   tokenInfos?: Record<string, TokenRegistry.TokenInfo>;
   requestFaucet: (symbol: string, uiAmount: string) => {};
-  requestSwap: (fromSymbol: string, toSymbol: string, uiAmtIn: number, uiAmtOutMin: number) => {};
+  requestSwap: (
+    fromSymbol: string,
+    toSymbol: string,
+    uiAmtIn: number,
+    uiAmtOutMin: number
+  ) => Promise<void>;
   requestDeposit: (
     lhsSymbol: string,
     rhsSymbol: string,
