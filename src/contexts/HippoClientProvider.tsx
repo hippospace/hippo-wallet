@@ -13,6 +13,7 @@ import { aptosClient, faucetClient } from 'config/aptosClient';
 import { sendPayloadTx } from 'utils/hippoWalletUtil';
 import { message } from 'components/Antd';
 import { TTransaction } from 'types/hippo';
+import { walletAddressEllipsis } from 'utils/utility';
 // import { UserTransactionRequest } from 'aptos/dist/api/data-contracts';
 
 interface HippoClientContextType {
@@ -58,8 +59,14 @@ const HippoClientProvider: FC<TProviderProps> = ({ children }) => {
 
   const getHippoWalletClient = useCallback(async () => {
     if (activeWallet) {
-      const client = await hippoWalletClient(activeWallet.aptosAccount);
-      setHippoWallet(client);
+      try {
+        const client = await hippoWalletClient(activeWallet.aptosAccount);
+        setHippoWallet(client);
+      } catch (err: any) {
+        message.error(
+          `Resource not found for account: ${walletAddressEllipsis(activeWallet.address || '')}`
+        );
+      }
     }
   }, [activeWallet]);
 

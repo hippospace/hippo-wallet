@@ -1,4 +1,4 @@
-import { createContext, FC, ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
+import { createContext, FC, ReactNode, useCallback, useEffect, useState } from 'react';
 import {
   ActiveAptosWallet,
   AptosAccountState,
@@ -20,7 +20,7 @@ import { logoutAccount, useUnlockedMnemonicAndSeed } from 'utils/wallet-seed';
 import nacl from 'tweetnacl';
 import bs58 from 'bs58';
 import { AptosAccount } from 'aptos';
-import { faucetClient } from 'config/aptosClient';
+import { faucetClient, aptosClient } from 'config/aptosClient';
 import { useLocalStorage } from 'hooks/useLocalStorage';
 import { isExtension } from 'utils/utility';
 
@@ -33,6 +33,7 @@ interface AptosWalletContextType {
   setWalletList: React.Dispatch<React.SetStateAction<WalletNameObject>>;
   walletList: Record<string, AptosImportedWalletObject>;
   addAccount: (walletName: string, importedAccount?: AptosAccount) => void;
+  deleteAccount: (address: string) => void;
   updateAccountInfo: (address: string, walletName: string) => void;
   setActiveAptosWallet: (address?: string) => void;
 }
@@ -60,42 +61,61 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
   const {
     mnemonic: { seed, derivationPath, importsEncryptionKey }
   } = useUnlockedMnemonicAndSeed();
+  const [aptosWalletAccounts, setAptosWalletAccounts] = useState<AptosWalletAccount[]>([]);
 
-  const { aptosWalletAccounts }: { aptosWalletAccounts: AptosWalletAccount[] } = useMemo(() => {
-    if (!seed || !derivationPath) {
-      return { aptosWalletAccounts: [{} as AptosWalletAccount] };
+  const refreshAccounts = useCallback(async () => {
+    let accounts = [{} as AptosWalletAccount];
+    try {
+      if (seed && derivationPath) {
+        const importedAccountsPromise = await Promise.all(
+          Object.keys(privateKeyImports).map(async (address, idx) => {
+            const { ciphertext, nonce } = privateKeyImports[address];
+            let aptosAccount = {} as AptosAccount;
+            if (importsEncryptionKey) {
+              const privateKey = nacl.secretbox.open(
+                bs58.decode(ciphertext),
+                bs58.decode(nonce),
+                importsEncryptionKey
+              );
+              if (privateKey) {
+                aptosAccount = new AptosAccount(privateKey);
+              }
+            }
+            const wallet = walletList[idx];
+            if (!wallet) {
+              return {
+                address: '',
+                walletName: 'INVALID_WALLET_NAME_',
+                aptosAccount
+              };
+            }
+
+            let accountResource;
+            try {
+              accountResource = await aptosClient.getAccountResources(address);
+            } catch (err) {
+              console.log('get account resources:: ', err);
+            }
+            return {
+              address: address,
+              walletName: wallet.walletName,
+              aptosAccount,
+              isAccountRemoved: !accountResource
+            };
+          })
+        );
+        const importedAccounts = importedAccountsPromise.filter((w) => w.address != '');
+        accounts = [...importedAccounts];
+      }
+    } catch (err) {
+      console.log('refresh account resources:: ', err);
+    } finally {
+      setAptosWalletAccounts(accounts);
     }
+  }, [derivationPath, importsEncryptionKey, privateKeyImports, seed, walletList]);
 
-    const importedAccounts = Object.keys(privateKeyImports)
-      .map((address, idx) => {
-        const { ciphertext, nonce } = privateKeyImports[address];
-        let aptosAccount = {} as AptosAccount;
-        if (importsEncryptionKey) {
-          const privateKey = nacl.secretbox.open(
-            bs58.decode(ciphertext),
-            bs58.decode(nonce),
-            importsEncryptionKey
-          );
-          if (privateKey) {
-            aptosAccount = new AptosAccount(privateKey);
-          }
-        }
-        const wallet = walletList[idx];
-        if (!wallet) {
-          return {
-            address: '',
-            walletName: 'INVALID_WALLET_NAME_',
-            aptosAccount
-          };
-        }
-        return {
-          address: address,
-          walletName: wallet.walletName,
-          aptosAccount
-        };
-      })
-      .filter((w) => w.address != '');
-    return { aptosWalletAccounts: [...importedAccounts] };
+  useEffect(() => {
+    refreshAccounts();
   }, [seed, derivationPath, privateKeyImports, importsEncryptionKey, walletList]);
 
   // Set the current selected Aptos wallet
@@ -191,6 +211,25 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
     [aptosWalletAccounts, walletList]
   );
 
+  const deleteAccount = useCallback(
+    async (address: string) => {
+      const walletIdx = aptosWalletAccounts.findIndex((acc) => acc.address === address);
+      const currentWallets = { ...walletList };
+      delete currentWallets[walletIdx];
+      const updatedWallets = { ...currentWallets };
+      const selectedWallet: AptosWalletAccount | undefined = aptosWalletAccounts[0];
+      setCurrentWallet(selectedWallet.address);
+      let newPrivateKeyImports = { ...privateKeyImports };
+      delete newPrivateKeyImports[address];
+      storePrivateKeyImports(newPrivateKeyImports);
+      setPrivateKeyImports(newPrivateKeyImports);
+      setWalletList(updatedWallets);
+      setWalletNameList(updatedWallets);
+      setActiveAptosWallet(selectedWallet.address);
+    },
+    [aptosWalletAccounts, privateKeyImports, setActiveAptosWallet, setCurrentWallet, walletList]
+  );
+
   useEffect(() => {
     if (window.parent && activeWallet?.aptosAccount) {
       const newWalletAddress = activeWallet?.aptosAccount.address();
@@ -231,6 +270,7 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
         activeWallet,
         setActiveAptosWallet,
         addAccount,
+        deleteAccount,
         aptosNetwork,
         disconnect,
         updateNetworkState,

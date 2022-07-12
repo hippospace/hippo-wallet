@@ -8,6 +8,7 @@ export interface AptosWalletAccount {
   walletName: string;
   address?: string;
   aptosAccount?: AptosAccountState;
+  isAccountRemoved?: boolean;
 }
 
 export type WalletNameObject = Record<number, { walletName: string }>;

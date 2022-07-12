@@ -11,6 +11,7 @@ import LogoIcon from 'components/LogoIcon';
 import WalletList from './WalletList';
 import AddNewWallet from './AddNewWallet';
 import ImportWallet from './ImportWallet';
+import useAptosWallet from 'hooks/useAptosWallet';
 
 const items: MenuProps['items'] = [
   {
@@ -31,6 +32,7 @@ const ConnectedScreens: React.FC = () => {
   const [current, setCurrent] = useState('coinList');
   const [visible, setVisible] = useState(false);
   const [addNew, setAddNew] = useState(false);
+  const { activeWallet, deleteAccount } = useAptosWallet();
 
   const showDrawer = () => {
     setVisible(true);
@@ -60,7 +62,24 @@ const ConnectedScreens: React.FC = () => {
   return (
     <div className="flex flex-col no-scrollbar">
       <WalletOverview onShowWalletList={showDrawer} />
-      <div className="flex flex-col gap-4 px-6 no-scrollbar">{getModalContent()}</div>
+      <div className="flex flex-col gap-4 px-6 no-scrollbar">
+        {activeWallet?.isAccountRemoved ? (
+          <div className="flex justify-between">
+            <small className="text-red-600">Account is removed in devent</small>
+            <small
+              className="underline text-red-600 cursor-pointer"
+              onClick={async (e: React.MouseEvent<HTMLElement>) => {
+                e.preventDefault();
+                e.stopPropagation();
+                await deleteAccount(activeWallet.address || '');
+              }}>
+              Delete
+            </small>
+          </div>
+        ) : (
+          getModalContent()
+        )}
+      </div>
       <div className="absolute bottom-0 w-full border-t-2 border-grey-100 bg-primePurple-900">
         <Menu
           mode="horizontal"
