@@ -240,9 +240,14 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
 
   useEffect(() => {
     if (window.parent && activeWallet?.aptosAccount) {
-      const newWalletAddress = activeWallet?.aptosAccount.address();
+      const newWalletAddress = activeWallet?.aptosAccount.address()?.toString();
+      const authKey = activeWallet?.aptosAccount.authKey()?.toString();
+      const publicKey = activeWallet?.aptosAccount.pubKey()?.toString();
       setCurrentWallet(newWalletAddress?.toString());
-      window.parent.postMessage({ method: 'account', address: newWalletAddress }, '*');
+      window.parent.postMessage(
+        { method: 'account', address: newWalletAddress, authKey, publicKey },
+        '*'
+      );
     }
   }, [activeWallet]);
 
