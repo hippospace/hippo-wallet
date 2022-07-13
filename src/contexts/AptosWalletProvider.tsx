@@ -215,8 +215,16 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
     async (address: string) => {
       const walletIdx = aptosWalletAccounts.findIndex((acc) => acc.address === address);
       const currentWallets = { ...walletList };
-      delete currentWallets[walletIdx];
-      const updatedWallets = { ...currentWallets };
+      const filteredWallet = Object.keys(currentWallets).filter(
+        (key) => parseInt(key) !== walletIdx
+      );
+      // delete currentWallets[walletIdx];
+      const updatedWallets = filteredWallet.reduce((wallets, current, currentIdx) => {
+        return {
+          ...wallets,
+          [currentIdx]: currentWallets[parseInt(current)]
+        };
+      }, {});
       const selectedWallet: AptosWalletAccount | undefined = aptosWalletAccounts[0];
       setCurrentWallet(selectedWallet.address);
       let newPrivateKeyImports = { ...privateKeyImports };
