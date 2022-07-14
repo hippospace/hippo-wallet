@@ -15,7 +15,12 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": "src"
+    "baseUrl": "src",
+    "types": [
+      //(various types, e.g. jquery, core-js),
+      "chrome"
+    ]
   },
-  "include": ["src"]
+  "include": ["src"],
+  
 }

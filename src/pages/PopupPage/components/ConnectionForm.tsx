@@ -37,12 +37,12 @@ const ConnectionForm: React.FC<TProps> = ({ origin, onApprove, onReject }) => {
     return (
       <div className="bg-primary rounded-xl p-4 w-full">
         <div className="w-full flex justify-between">
-          <div className="font-bold text-grey-900">Site Domain</div>
-          <div className="font-bold text-grey-900">{origin}</div>
+          <div className="font-bold text-grey-100">Site Domain</div>
+          <div className="font-bold text-grey-100">{origin}</div>
         </div>
         <div className="w-full flex justify-between">
-          <div className="font-bold text-grey-900">Wallet Address</div>
-          <div className="font-bold text-grey-900">
+          <div className="font-bold text-grey-100">Wallet Address</div>
+          <div className="font-bold text-grey-100">
             {walletAddressEllipsis(activeWallet?.address || '')}
           </div>
         </div>

@@ -11,7 +11,9 @@ const CoinList: React.FC = () => {
         const store = tokenStores[symbol];
         const tokenInfo = tokenInfos[symbol];
         return (
-          <div className="py-2 px-3.5 flex bg-grey-100 justify-between h-[56px]" key={symbol}>
+          <div
+            className="py-2 px-3.5 flex bg-primePurple-100 justify-between h-[56px]"
+            key={symbol}>
             <div className="flex gap-3 justify-center items-center">
               <CoinIcon logoSrc={tokenInfo.logo_url} />
               <div className="flex flex-col">

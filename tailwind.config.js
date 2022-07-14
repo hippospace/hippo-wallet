@@ -3,6 +3,13 @@ const plugin = require('tailwindcss/plugin');
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}', './src/**/*.module.scss', './public/index.html'],
   theme: {
+    screens: {
+      // => @media (min-width: 640px and max-width: 767px) { ... }
+      'xs': {'max': '639px'},
+      'sm': {'min': '640px', 'max': '767px'},
+      'md': {'min': '768px', 'max': '1023px'},
+      'lg': {'min': '1024px'}
+    },
     extend: {
       colors: {
         primary: '#2D2D2D',

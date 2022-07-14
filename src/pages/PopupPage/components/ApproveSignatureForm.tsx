@@ -161,19 +161,19 @@ const ApproveSignatureForm: React.FC<TProps> = ({ txPayload, onApprove, onReject
       return (
         <div className="bg-primary rounded-xl p-4 w-full">
           <div className="w-full flex justify-between">
-            <div className="font-bold text-grey-900">Contract Address</div>
-            <div className="font-bold text-grey-900">{walletAddressEllipsis(address)}</div>
+            <div className="font-bold text-grey-100">Contract Address</div>
+            <div className="font-bold text-grey-100">{walletAddressEllipsis(address)}</div>
           </div>
           <div className="w-full flex justify-between">
-            <div className="font-bold text-grey-900">Contract Method</div>
-            <div className="font-bold text-grey-900">
+            <div className="font-bold text-grey-100">Contract Method</div>
+            <div className="font-bold text-grey-100">
               {moduleName}::{functionName}
             </div>
           </div>
           <Collapse defaultActiveKey={['1']} ghost expandIconPosition="end">
             <Collapse.Panel
               className={styles.collapse}
-              header={<div className="font-bold text-grey-900">Details</div>}
+              header={<div className="font-bold text-grey-100">Details</div>}
               key="1">
               {Object.keys(transactionInfo).map((key) => (
                 <div key={key} className="w-full flex justify-between">
@@ -190,16 +190,16 @@ const ApproveSignatureForm: React.FC<TProps> = ({ txPayload, onApprove, onReject
 
   return (
     <div className="p-8">
-      <div className="flex flex-col items-center gap-10">
+      <div className="flex flex-col items-center gap-4">
         {/* <h5 className="font-bold text-grey-900">
           {request?.payload.type} ({walletAddressEllipsis(privateKeyObject?.address || '')})
         </h5> */}
         <div className="w-full flex flex-col items-center">
-          <LogoIcon className="mt-8 w-[120px] h-[120px]" />
-          <h4 className="font-bold text-grey-900 my-8">Transaction Confirmation</h4>
+          <LogoIcon className="w-[96px] h-[96px]" />
+          <h5 className="font-bold text-grey-100 my-6">Transaction Confirmation</h5>
           {renderTransactionDetail}
         </div>
-        <div className="flex w-full justify-between gap-10">
+        <div className="flex w-full justify-between gap-6">
           <Button variant="outlined" className="flex-grow font-bold" onClick={handleOnCancel}>
             <h6 className="text-inherit">Cancel</h6>
           </Button>

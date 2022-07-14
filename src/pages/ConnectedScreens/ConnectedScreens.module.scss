@@ -4,25 +4,23 @@
       @apply bg-transparent;
       .ant-menu-item:not(:last-child) {
         @apply flex-grow flex justify-center items-center h-16 opacity-100;
-
         svg,
         path {
           @apply fill-grey-500;
         }
-      }
-    }
-
-    // remove blue background
-    &.ant-menu.ant-menu-dark .ant-menu-item-selected,
-    &.ant-menu-submenu-popup.ant-menu-dark .ant-menu-item-selected,
-    &.ant-menu-dark.ant-menu-horizontal > .ant-menu-item:hover {
-      background: transparent;
-      svg,
-      path {
-        @apply fill-primePurple-100;
-      }
-      a {
-        @apply text-grey-100;
+        // remove blue background
+        &.ant-menu-item-selected,
+        &.ant-menu-item-selected,
+        &:hover{
+          background: transparent;
+          svg,
+          path {
+            @apply fill-primePurple-100;
+          }
+          a {
+            @apply text-grey-100;
+          }
+        }
       }
     }
   }
