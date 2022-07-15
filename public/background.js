@@ -33,7 +33,12 @@ const handleConnect = (message, sender, sendResponse) => {
     if (!connectedAddress) {
       launchPopup(message, sender, sendResponse);
     } else {
-      sendResponse({ address: connectedAddress.publicKey, id: message.id });
+      sendResponse({
+        address: connectedAddress.address,
+        publicKey: connectedAddress.publicKey,
+        authKey: connectedAddress.authKey,
+        id: message.id
+      });
     }
   });
 };

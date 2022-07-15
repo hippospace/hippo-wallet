@@ -1,4 +1,4 @@
-import { Drawer, Menu, MenuProps, Tabs } from 'components/Antd';
+import { Drawer, Menu, MenuProps, Spin, Tabs } from 'components/Antd';
 import { useState } from 'react';
 import cx from 'classnames';
 import CoinList from './CoinList';
@@ -12,6 +12,9 @@ import WalletList from './WalletList';
 import AddNewWallet from './AddNewWallet';
 import ImportWallet from './ImportWallet';
 import Swap from '../Swap';
+import useAptosWallet from 'hooks/useAptosWallet';
+import useHippoClient from 'hooks/useHippoClient';
+import { LoadingOutlined } from '@ant-design/icons';
 
 const items: MenuProps['items'] = [
   {
@@ -36,6 +39,8 @@ const ConnectedScreens: React.FC = () => {
   const [current, setCurrent] = useState('coinList');
   const [visible, setVisible] = useState(false);
   const [addNew, setAddNew] = useState(false);
+  const { activeWallet, deleteAccount } = useAptosWallet();
+  const { isLoading } = useHippoClient();
 
   const showDrawer = () => {
     setVisible(true);
@@ -50,6 +55,30 @@ const ConnectedScreens: React.FC = () => {
   };
 
   const getModalContent = () => {
+    if (isLoading) {
+      return (
+        <Spin
+          className="mt-6"
+          indicator={<LoadingOutlined style={{ fontSize: 48, color: '#fff' }} spin />}
+        />
+      );
+    }
+    if (activeWallet?.isAccountRemoved) {
+      return (
+        <div className="flex justify-between">
+          <small className="text-red-600">Account is removed in devent</small>
+          <small
+            className="underline text-red-600 cursor-pointer"
+            onClick={async (e: React.MouseEvent<HTMLElement>) => {
+              e.preventDefault();
+              e.stopPropagation();
+              await deleteAccount(activeWallet.address || '');
+            }}>
+            Delete
+          </small>
+        </div>
+      );
+    }
     switch (current) {
       case 'coinList':
         return <CoinList />;

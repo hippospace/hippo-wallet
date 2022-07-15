@@ -24,11 +24,13 @@ const ConnectionForm: React.FC<TProps> = ({ origin, onApprove, onReject }) => {
         const connectedAddress = {
           ...(result.connectedAddress || {}),
           [origin]: {
-            publicKey: activeWallet?.address
+            address: activeWallet?.aptosAccount?.address()?.toString(),
+            publicKey: activeWallet?.aptosAccount?.pubKey()?.toString(),
+            authKey: activeWallet?.aptosAccount?.authKey()?.toString()
           }
         };
         chrome.storage.local.set({ connectedAddress });
-        onApprove({ address: activeWallet?.address, id: 1 });
+        onApprove({ ...connectedAddress[origin], id: 1 });
       });
     }
   };

@@ -13,6 +13,7 @@ import { aptosClient, faucetClient } from 'config/aptosClient';
 import { sendPayloadTx } from 'utils/hippoWalletUtil';
 import { message } from 'components/Antd';
 import { TTransaction } from 'types/hippo';
+import { walletAddressEllipsis } from 'utils/utility';
 // import { UserTransactionRequest } from 'aptos/dist/api/data-contracts';
 
 interface HippoClientContextType {
@@ -44,6 +45,7 @@ interface HippoClientContextType {
   ) => {};
   transaction?: TTransaction;
   setTransaction: (trans: TTransaction) => void;
+  isLoading: boolean;
 }
 
 interface TProviderProps {
@@ -60,11 +62,19 @@ const HippoClientProvider: FC<TProviderProps> = ({ children }) => {
   const [transaction, setTransaction] = useState<TTransaction>();
   const [tokenStores, setTokenStores] = useState<Record<string, X0x1.Coin.CoinStore>>();
   const [tokenInfos, setTokenInfos] = useState<Record<string, TokenRegistry.TokenInfo>>();
+  const [isLoading, setIsLoading] = useState(false);
 
   const getHippoWalletClient = useCallback(async () => {
     if (activeWallet) {
-      const client = await hippoWalletClient(activeWallet.aptosAccount);
-      setHippoWallet(client);
+      try {
+        const client = await hippoWalletClient(activeWallet.aptosAccount);
+        setHippoWallet(client);
+      } catch (err: any) {
+        message.error(
+          `Resource not found for account: ${walletAddressEllipsis(activeWallet.address || '')}`
+        );
+        setIsLoading(false);
+      }
     }
   }, [activeWallet]);
 
@@ -74,6 +84,7 @@ const HippoClientProvider: FC<TProviderProps> = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    setIsLoading(true);
     getHippoWalletClient();
     getHippoSwapClient();
   }, [activeWallet, getHippoWalletClient]);
@@ -85,6 +96,7 @@ const HippoClientProvider: FC<TProviderProps> = ({ children }) => {
       if (refresh) {
         setRefresh(false);
       }
+      setIsLoading(false);
     }
   }, [hippoWallet, refresh]);
 
@@ -251,6 +263,7 @@ const HippoClientProvider: FC<TProviderProps> = ({ children }) => {
         requestFaucet,
         requestSwap,
         requestDeposit,
+        isLoading,
         requestWithdraw,
         transaction,
         setTransaction

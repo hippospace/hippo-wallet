@@ -10,29 +10,56 @@ interface TProps {
 }
 
 const WalletList: React.FC<TProps> = ({ onSelect, onAddNew }) => {
-  const { aptosWalletAccounts, setActiveAptosWallet, activeWallet } = useAptosWallet();
+  const { aptosWalletAccounts, setActiveAptosWallet, activeWallet, deleteAccount } =
+    useAptosWallet();
   const privateKeyObject = activeWallet?.aptosAccount?.toPrivateKeyObject();
 
   const optionLabel = useCallback(
-    (walletName: string, address: string) => {
+    (walletName: string, address: string, deleted = false) => {
       return (
-        <div className="flex justify-between">
-          <div className="title w-[88px] truncate font-bold text-grey-900">{walletName}</div>
-          <div className="title font-bold text-grey-500">
-            ({walletAddressEllipsis(address || '')})
+        <div className="flex flex-col">
+          <div className="flex justify-between">
+            <div
+              className={`title w-[88px] truncate font-bold text-grey-900 ${
+                deleted ? 'line-through' : ''
+              }`}>
+              {walletName}
+            </div>
+            <div className="title font-bold text-grey-500">
+              ({walletAddressEllipsis(address || '')})
+            </div>
+            <span>
+              {address === privateKeyObject?.address ? (
+                <CheckIcon />
+              ) : (
+                <div className="w-6 block" />
+              )}
+            </span>
           </div>
-          <span>
-            {address === privateKeyObject?.address ? <CheckIcon /> : <div className="w-6 block" />}
-          </span>
+          {deleted && (
+            <div className="flex justify-between">
+              <small className="text-red-600">Account is removed in devent</small>
+              <small
+                className="underline text-red-600 cursor-pointer"
+                onClick={async (e: React.MouseEvent<HTMLElement>) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  await deleteAccount(address);
+                  onSelect();
+                }}>
+                Delete
+              </small>
+            </div>
+          )}
         </div>
       );
     },
-    [privateKeyObject]
+    [deleteAccount, onSelect, privateKeyObject?.address]
   );
 
   const items: MenuProps['items'] = useMemo(() => {
-    const walletOptions = aptosWalletAccounts.map(({ walletName, address }) => ({
-      label: optionLabel(walletName, address || ''),
+    const walletOptions = aptosWalletAccounts.map(({ walletName, address, isAccountRemoved }) => ({
+      label: optionLabel(walletName, address || '', isAccountRemoved),
       key: address || '',
       onClick: async () => {
         await setActiveAptosWallet(address);
