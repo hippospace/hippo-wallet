@@ -128,6 +128,7 @@ const PopupPage: React.FC<TProps> = ({ opener }) => {
     onCancel();
   };
 
+  console.log('checkkkkk>>>', isExtension, txRequest?.method, origin);
   if (isExtension && txRequest?.method === 'connect' && origin) {
     return <ConnectionForm origin={origin} onApprove={onApprove} onReject={onReject} />;
   }

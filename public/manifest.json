@@ -7,23 +7,32 @@
     "48": "icon/hippo_logo_48.png",
     "128": "icon/hippo_logo_128.png"
   },
-  "browser_action": {
-    "default_popup": "index.html"
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": {
+      "16": "icon/hippo_logo_16.png",
+      "48": "icon/hippo_logo_48.png",
+      "128": "icon/hippo_logo_128.png"
+    }
   },
   "version": "1.0.0",
-  "manifest_version": 2,
-  "background": {
-    "persistent": true,
-    "scripts": ["background.js"]
-  },
-  "permissions": ["storage"],
+  "manifest_version": 3,
   "content_scripts": [
     {
-      "matches": ["file://*/*", "http://*/*", "https://*/*"],
+      "matches": ["<all_urls>"],
       "js": ["contentscript.js"],
-      "run_at": "document_start",
-      "all_frames": true
+      "run_at": "document_start"
     }
   ],
-  "web_accessible_resources": ["inpage.js"]
+  "web_accessible_resources": [
+    {
+      "resources": ["inpage.js"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": ["storage", "tabs", "scripting"],
+  "host_permissions": ["<all_urls>"]
 }

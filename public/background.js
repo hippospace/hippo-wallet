@@ -19,7 +19,7 @@ function launchPopup(message, sender, sendResponse) {
       height: 600,
       top: focusedWindow.top,
       left: focusedWindow.left + (focusedWindow.width - 375),
-      setSelfAsOpener: true,
+      // setSelfAsOpener: true,
       focused: true
     });
   });
