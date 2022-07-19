@@ -118,11 +118,11 @@ const WalletDetail: React.FC<TProps> = ({ onSuccess }) => {
             }
           />
         </Form.Item>
-        <div className="flex w-[328px] justify-between absolute bottom-4">
-          <Button variant="outlined" className="w-[140px] font-bold" onClick={onSuccess}>
+        <div className="flex w-full justify-between mt-24 gap-4">
+          <Button variant="outlined" className="w-full font-bold" onClick={onSuccess}>
             Cancel
           </Button>
-          <Button type="submit" className="w-[140px] font-bold" disabled={!formik.dirty}>
+          <Button type="submit" className="w-full font-bold" disabled={!formik.dirty}>
             Update
           </Button>
         </div>

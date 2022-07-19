@@ -1,7 +1,7 @@
 .menu {
   &:global {
     &.ant-menu.ant-menu-dark {
-      @apply bg-secondary rounded-[11px];
+      @apply bg-primePurple-900 rounded-[11px];
 
       .ant-menu-item {
         @apply flex-grow flex justify-center items-center h-16 opacity-100 px-0 pl-0;
@@ -15,10 +15,10 @@
     &.ant-menu-dark.ant-menu-horizontal > .ant-menu-item:hover {
       background-color: transparent !important;
       .title {
-        @apply text-primePurple-900;
+        @apply text-primePurple-100;
       }
       a {
-        @apply text-grey-900;
+        @apply text-grey-100;
       }
     }
   }

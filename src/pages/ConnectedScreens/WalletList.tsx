@@ -20,12 +20,12 @@ const WalletList: React.FC<TProps> = ({ onSelect, onAddNew }) => {
         <div className="flex flex-col">
           <div className="flex justify-between">
             <div
-              className={`title w-[88px] truncate font-bold text-grey-900 ${
+              className={`text-2xl w-[88px] truncate font-bold text-grey-100 ${
                 deleted ? 'line-through' : ''
               }`}>
               {walletName}
             </div>
-            <div className="title font-bold text-grey-500">
+            <div className="text-lg leading-[29px] font-bold text-grey-100">
               ({walletAddressEllipsis(address || '')})
             </div>
             <span>
@@ -71,7 +71,7 @@ const WalletList: React.FC<TProps> = ({ onSelect, onAddNew }) => {
       {
         label: (
           <div className="flex justify-between items-center">
-            <div className="title font-bold text-grey-900">Add/Connect wallet</div>
+            <div className="title font-bold text-grey-300">Add/Connect wallet</div>
             <PlusSMIcon />
           </div>
         ),

@@ -34,8 +34,8 @@
 
 .drawer {
   :global {
-    .ant-drawer-content-wrapper {
-      @apply border-4 border-grey-900 rounded-tl-[11px] rounded-bl-[11px] overflow-hidden border-r-0;
+    .ant-drawer-content, .ant-drawer-header {
+      @apply bg-primePurple-900;
     }
   }
 }
@@ -48,7 +48,18 @@
       .ant-tabs-nav-list {
         @apply w-full;
         .ant-tabs-tab {
-          @apply flex-grow justify-center font-bold;
+          @apply flex-grow justify-center font-bold w-[50%] m-0;
+          .ant-tabs-tab-btn{
+            @apply text-grey-500;
+          }
+          &.ant-tabs-tab-active{
+            .ant-tabs-tab-btn{
+              @apply text-primePurple-100;
+            }
+          }
+        }
+        .ant-tabs-ink-bar{
+          @apply bg-primePurple-100 w-[50%];
         }
       }
     }

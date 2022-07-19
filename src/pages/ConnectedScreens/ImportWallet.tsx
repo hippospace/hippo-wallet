@@ -49,12 +49,12 @@ const ImportWallet: React.FC<TProps> = ({ onSuccess }) => {
   });
 
   return (
-    <form className="flex flex-col gap-8" onSubmit={formik.handleSubmit}>
-      <h4 className="text-grey-900 font-bold">Import Wallet</h4>
+    <form className="flex flex-col" onSubmit={formik.handleSubmit}>
+      {/* <h4 className="text-grey-900 font-bold">Import Wallet</h4> */}
       <Form.Item
         {...formItemLayout}
         className="w-full"
-        label="Wallet Name"
+        label={<span className="font-bold text-lg text-grey-100">Your Wallet Name</span>}
         validateStatus={formik.errors.walletName ? 'error' : ''}
         help={formik.errors.walletName}>
         <TextInput
@@ -66,7 +66,7 @@ const ImportWallet: React.FC<TProps> = ({ onSuccess }) => {
       <Form.Item
         {...formItemLayout}
         className="w-full"
-        label="Private Key"
+        label={<span className="font-bold text-lg text-grey-100">Private Key</span>}
         validateStatus={formik.errors.privateKey ? 'error' : ''}
         help={formik.errors.privateKey}>
         <TextInput
@@ -76,11 +76,11 @@ const ImportWallet: React.FC<TProps> = ({ onSuccess }) => {
           onChange={formik.handleChange}
         />
       </Form.Item>
-      <div className="flex w-full justify-between mt-20">
-        <Button variant="outlined" className="w-[230px] font-bold" onClick={onSuccess}>
+      <div className="flex w-full justify-between mt-40 gap-4">
+        <Button variant="outlined" className="w-full font-bold" onClick={onSuccess}>
           Cancel
         </Button>
-        <Button type="submit" className="w-[230px] font-bold">
+        <Button type="submit" className="w-full font-bold">
           Confirm
         </Button>
       </div>

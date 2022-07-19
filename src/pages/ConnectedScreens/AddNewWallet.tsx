@@ -57,11 +57,11 @@ const AddNewWallet: React.FC<TProps> = ({ onSuccess }) => {
 
   return (
     <form className="flex flex-col gap-8" onSubmit={formik.handleSubmit}>
-      <h4 className="text-grey-100 font-bold">Add New Wallet</h4>
+      {/* <h4 className="text-grey-100 font-bold">Add New Wallet</h4> */}
       <Form.Item
         {...formItemLayout}
         className="w-full"
-        label="Wallet Name"
+        label={<span className="font-bold text-lg text-grey-100">New Wallet Name</span>}
         validateStatus={formik.errors.walletName ? 'error' : ''}
         help={formik.errors.walletName}>
         <TextInput
@@ -70,7 +70,7 @@ const AddNewWallet: React.FC<TProps> = ({ onSuccess }) => {
           onChange={formik.handleChange}
         />
       </Form.Item>
-      <div className="flex w-full justify-between mt-20 gap-2">
+      <div className="flex w-full justify-between mt-56 gap-2">
         <Button variant="outlined" className="w-full font-bold" onClick={onSuccess}>
           Cancel
         </Button>

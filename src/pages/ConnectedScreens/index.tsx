@@ -119,6 +119,7 @@ const ConnectedScreens: React.FC = () => {
             <CloseIcon onClick={onClose} className="cursor-pointer" />
           </div>
         }
+        className={cx(styles.drawer)}
         placement="left"
         closable={false}
         visible={visible}
@@ -128,7 +129,7 @@ const ConnectedScreens: React.FC = () => {
       </Drawer>
       {addNew && (
         <div className="absolute inset-0 bg-primePurple-900 z-[9999] py-16 px-8 ">
-          <div onClick={() => setAddNew(false)} className="absolute right-8 top-9 cursor-pointer">
+          <div onClick={() => setAddNew(false)} className="absolute right-8 top-6 cursor-pointer">
             <CloseIcon />
           </div>
           <Tabs defaultActiveKey="1" className={cx(styles.tabs)}>

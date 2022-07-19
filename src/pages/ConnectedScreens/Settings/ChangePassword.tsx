@@ -115,11 +115,11 @@ const ChangePassword: React.FC<TProps> = ({ onSuccess }) => {
             onChange={formik.handleChange}
           />
         </Form.Item>
-        <div className="flex w-[328px] justify-between absolute bottom-4">
-          <Button variant="outlined" className="w-[140px] font-bold" onClick={onSuccess}>
+        <div className="flex w-full justify-between gap-4 mt-20">
+          <Button variant="outlined" className="w-full font-bold" onClick={onSuccess}>
             Cancel
           </Button>
-          <Button type="submit" className="w-[140px] font-bold">
+          <Button type="submit" className="w-full font-bold">
             Update
           </Button>
         </div>
