@@ -1,12 +1,16 @@
 import { Drawer } from 'antd';
 import Button from 'components/Button';
 import { FC, ReactNode, useCallback, useEffect, useState } from 'react';
+import cx from 'classnames';
+import styles from './ActionSheet.module.scss';
 
 export interface ActionSheetProps {
+  className?: string;
   children: ReactNode;
   visible?: boolean;
   title?: string;
   footer?: ReactNode;
+  variant?: 'darkBg' | 'lightBg';
   mode: 'fullTab' | 'fullScreen' | 'auto';
   onClose?: () => void;
 }
@@ -16,6 +20,8 @@ const ActionSheet: FC<ActionSheetProps> = ({
   visible = false,
   title,
   footer,
+  className,
+  variant = 'lightBg',
   mode = 'fullTab',
   onClose = () => {}
 }) => {
@@ -52,6 +58,10 @@ const ActionSheet: FC<ActionSheetProps> = ({
       style={{ position: 'absolute' }}
       height={height}
       title={title}
+      className={cx(styles.actionSheet, className, {
+        [styles.darkBg]: variant === 'darkBg',
+        [styles.lightBg]: variant === 'lightBg'
+      })}
       width={'100%'}
       footer={
         footer ?? (

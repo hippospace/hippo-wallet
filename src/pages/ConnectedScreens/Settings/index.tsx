@@ -77,14 +77,14 @@ const Settings: React.FC = () => {
           {renderContent}
         </div>
       )} */}
-      <div className="flex flex-col gap-16">
-        <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-28">
+        <div className="flex flex-col gap-2">
           {settingMenu.map(({ label, helpText, onClick }) => {
             return (
               <div
                 key={label}
                 onClick={onClick}
-                className="flex bg-primePurple-100 py-4 px-8 rounded-xxl justify-between items-center cursor-pointer">
+                className="flex bg-grey-100 py-2 px-8 rounded-xl justify-between items-center cursor-pointer">
                 <div className="flex flex-col">
                   <h5 className="font-bold text-grey-900 text-lg">{label}</h5>
                   <h6 className="text-grey-700 text-[14px]">{helpText}</h6>

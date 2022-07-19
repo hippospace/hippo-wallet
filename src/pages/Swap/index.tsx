@@ -111,7 +111,7 @@ const Swap: FC = () => {
   return (
     <div className="pt-4 h-full flex flex-col min-h-full">
       <div>
-        <div className="flex justify-between text-gray-50 mb-1 px-1">
+        <div className="flex justify-between text-gray-50 mb-1 px-1 font-bold">
           <span>You Pay</span>
           <span>Max: 1000</span>
         </div>
@@ -122,11 +122,11 @@ const Swap: FC = () => {
           onAmountChange={(a: number) => setInputAmount(a)}
         />
       </div>
-      <Button className="ml-auto mr-2 mt-2 -mb-4" variant="icon" onClick={switchToken}>
-        <Switch className="fill-white" />
+      <Button className="mx-auto button-pt" variant="space" onClick={switchToken}>
+        <Switch />
       </Button>
       <div>
-        <div className="text-gray-50 mb-1 px-1">
+        <div className="text-gray-50 mb-1 px-1 font-bold">
           <span>You Recieve</span>
         </div>
         <InputWithTokenSelector
@@ -138,7 +138,7 @@ const Swap: FC = () => {
       </div>
       <Button
         variant="icon"
-        className="ml-auto mr-2 mb-1 mt-4"
+        className="ml-auto mr-2 mb-1 mt-10"
         onClick={() => setIsTxSettingsVisible(true)}>
         <SettingGear className="font-icon text-white text-base" />
       </Button>
@@ -173,12 +173,13 @@ const Swap: FC = () => {
       </ActionSheet>
       <ActionSheet
         visible={isTxSettingsVisible}
+        variant={'darkBg'}
         title={'Transaction Settings'}
         onClose={() => setIsTxSettingsVisible(false)}
         mode="auto">
         <div>
-          <div className="font-bold mb-2 text-base">Slippage tolerance</div>
-          <div className="flex gap-2">
+          <div className="font-bold mb-2 text-base text-grey-100">Slippage Tolerance</div>
+          <div className="flex gap-2 w-full">
             {slippageOptions.map((s, i) => {
               return (
                 <Button
@@ -190,34 +191,47 @@ const Swap: FC = () => {
                 </Button>
               );
             })}
-            <div className="flex items-center relative">
+          </div>
+          <div className="flex items-center relative pt-2">
+            <div className="inline-flex border-[3px] border-grey-300 rounded-xl text-right w-full h-10 px-2">
               <PositiveFloatNumInput
                 inputAmount={
                   slippageOptions.includes(swapSettings.slippageTolerance)
                     ? 0
                     : swapSettings.slippageTolerance
                 }
-                placeholder="custom"
-                className="border-[3px] border-grey-900 rounded-xl text-right w-20 h-10 mr-1"
+                placeholder="Custom"
+                className="h-full w-full bg-transparent font-bold text-grey-300"
                 onAmountChange={(v) => setSlippage(v)}
               />
-              %
+              <div className="font-bold h-full w-full">
+                <span className="h-full flex justify-end items-center text-grey-300">%</span>
+              </div>
             </div>
           </div>
         </div>
-        <div className="mt-4">
-          <div className="font-bold mb-2 text-base">Transaction deadline</div>
-          <PositiveFloatNumInput
-            inputAmount={swapSettings.txDeadline}
-            className="border-[3px] border-grey-900 rounded-xl text-right w-20 h-10 mr-2"
-            onAmountChange={(v) => setTxDeadline(v)}
-          />
-          minutes
+        <div className="mt-6 mb-2">
+          <div className="font-bold mb-2 text-base text-grey-100">Transaction Deadline</div>
+          <div className="flex items-center">
+            <div className="inline-flex justify-center items-center border-[3px] border-grey-300 rounded-xl text-right w-full h-10 px-2">
+              <PositiveFloatNumInput
+                inputAmount={swapSettings.txDeadline}
+                className="h-full w-full bg-transparent font-bold text-grey-300"
+                onAmountChange={(v) => setTxDeadline(v)}
+              />
+              <div className="font-bold h-full">
+                <span className="h-full flex justify-center items-center text-grey-300">
+                  Minutes
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </ActionSheet>
       <ActionSheet
         visible={isReviewOrderVisible}
         mode={'fullTab'}
+        variant={'darkBg'}
         footer={
           <div className="flex gap-2">
             <Button
@@ -227,10 +241,11 @@ const Swap: FC = () => {
               Cancel
             </Button>
             <Button className="flex-1" onClick={() => onSwap()}>
-              Confirm
+              Swap
             </Button>
           </div>
         }>
+        <div className="font-bold text-2xl text-grey-100 text-center mb-4">Review Order</div>
         <OrderReview />
       </ActionSheet>
     </div>

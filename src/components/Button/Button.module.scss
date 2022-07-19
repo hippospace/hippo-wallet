@@ -1,5 +1,5 @@
 .button {
-  @apply cursor-pointer py-3 px-5 font-bold rounded-lg flex items-center justify-center text-center uppercase text-lg;
+  @apply cursor-pointer py-2 px-5 font-bold rounded-lg flex items-center justify-center text-center uppercase text-base;
   &.solid {
     @apply bg-primePurple-100 text-primePurple-900 border-[3px] border-solid border-primePurple-100;
 
@@ -34,6 +34,13 @@
 
   &.icon {
     @apply border-none p-0 w-fit h-fit;
+
+    &:hover {
+      @apply opacity-60;
+    }
+  }
+  &.space{
+    @apply border-none pt-4 w-fit h-fit;
     &:hover {
       @apply opacity-60;
     }
@@ -58,11 +65,11 @@
   }
 
   &.selected {
-    @apply bg-primePurple-100 text-primePurple-900 border-[3px] border-solid border-primePurple-100;
+    @apply text-primePurple-900 bg-primePurple-100 border-[3px] border-solid border-primePurple-100;
   }
 
   &.notSelected {
-    @apply border-[3px] border-grey-500 bg-transparent;
-    @apply text-grey-900;
+    @apply border-[3px] border-grey-300 bg-transparent;
+    @apply text-grey-300;
   }
 }

@@ -1,0 +1,18 @@
+.actionSheet{
+    &.darkBg{
+       :global{
+           .ant-drawer-content{
+               @apply bg-primePurple-900;
+                .ant-drawer-header{
+                    @apply border-b-grey-300 bg-primePurple-900 border-b-grey-300 border-b-2;
+                    .ant-drawer-title{
+                        @apply font-bold text-xl text-grey-100;
+                    }
+                }
+                .ant-drawer-footer{
+                    @apply bg-primePurple-900 border-none px-6 py-4;
+                }
+           }
+       }
+    }
+}

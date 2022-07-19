@@ -19,7 +19,7 @@ const InputWithTokenSelector: FC<InputWithTokenSelectorProps> = ({
   onAmountChange
 }) => {
   return (
-    <div className="flex items-center justify-between bg-grey-100 py-1 px-2 rounded-xl border-[3px] border-grey-900">
+    <div className="flex items-center justify-between bg-grey-100 py-1 px-2 rounded-xl ">
       <TokenSelector currentToken={token} onSelect={onSelectToken} />
       <PositiveFloatNumInput
         inputAmount={inputAmount}

@@ -14,7 +14,7 @@ const TokenLabel: FC<TokenLabelProps> = ({ token, symbolOnly = true, className =
     <div className={classNames('flex items-center', className)}>
       <CoinIcon logoSrc={token.logo_url} />
       <div className="ml-1">
-        <div className="font-extrabold">{token.symbol}</div>
+        <div className="font-extrabold text-sm">{token.symbol}</div>
         {!symbolOnly && <div>{token.name}</div>}
       </div>
     </div>

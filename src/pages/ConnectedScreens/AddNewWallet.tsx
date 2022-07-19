@@ -57,7 +57,7 @@ const AddNewWallet: React.FC<TProps> = ({ onSuccess }) => {
 
   return (
     <form className="flex flex-col gap-8" onSubmit={formik.handleSubmit}>
-      <h4 className="text-grey-900 font-bold">Add New Wallet</h4>
+      <h4 className="text-grey-100 font-bold">Add New Wallet</h4>
       <Form.Item
         {...formItemLayout}
         className="w-full"
@@ -70,11 +70,11 @@ const AddNewWallet: React.FC<TProps> = ({ onSuccess }) => {
           onChange={formik.handleChange}
         />
       </Form.Item>
-      <div className="flex w-full justify-between mt-20">
-        <Button variant="outlined" className="w-[230px] font-bold" onClick={onSuccess}>
+      <div className="flex w-full justify-between mt-20 gap-2">
+        <Button variant="outlined" className="w-full font-bold" onClick={onSuccess}>
           Cancel
         </Button>
-        <Button isLoading={isAccountBeingCreated} type="submit" className="w-[230px] font-bold">
+        <Button isLoading={isAccountBeingCreated} type="submit" className="w-full font-bold">
           Confirm
         </Button>
       </div>

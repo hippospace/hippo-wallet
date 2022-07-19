@@ -127,8 +127,8 @@ const ConnectedScreens: React.FC = () => {
         <WalletList onSelect={onClose} onAddNew={() => setAddNew(true)} />
       </Drawer>
       {addNew && (
-        <div className="absolute inset-0 bg-secondary z-[9999] py-16 px-8 ">
-          <div onClick={() => setAddNew(false)} className="absolute right-12 top-9 cursor-pointer">
+        <div className="absolute inset-0 bg-primePurple-900 z-[9999] py-16 px-8 ">
+          <div onClick={() => setAddNew(false)} className="absolute right-8 top-9 cursor-pointer">
             <CloseIcon />
           </div>
           <Tabs defaultActiveKey="1" className={cx(styles.tabs)}>

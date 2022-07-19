@@ -8,6 +8,9 @@
         path {
           @apply fill-grey-500;
         }
+        circle{
+          @apply stroke-grey-500 fill-transparent;
+        }
         // remove blue background
         &.ant-menu-item-selected,
         &.ant-menu-item-selected,
@@ -16,6 +19,9 @@
           svg,
           path {
             @apply fill-primePurple-100;
+          }
+          circle{
+            @apply stroke-primePurple-100;
           }
           a {
             @apply text-grey-100;
@@ -41,7 +47,6 @@
       .ant-tabs-nav-wrap,
       .ant-tabs-nav-list {
         @apply w-full;
-
         .ant-tabs-tab {
           @apply flex-grow justify-center font-bold;
         }

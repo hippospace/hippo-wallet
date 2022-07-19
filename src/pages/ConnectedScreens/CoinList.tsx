@@ -11,14 +11,12 @@ const CoinList: React.FC = () => {
         const store = tokenStores[symbol];
         const tokenInfo = tokenInfos[symbol];
         return (
-          <div
-            className="py-2 px-3.5 flex bg-primePurple-100 justify-between h-[56px]"
-            key={symbol}>
+          <div className="py-2 px-3.5 flex bg-grey-100 justify-between h-[56px]" key={symbol}>
             <div className="flex gap-3 justify-center items-center">
               <CoinIcon logoSrc={tokenInfo.logo_url} />
               <div className="flex flex-col">
-                <div className="font-bold text-grey-900 text-xl">{tokenInfo.name}</div>
-                <small className="font-bold text-grey-500">{tokenInfo.symbol}</small>
+                <div className="font-bold text-grey-900 text-base">{tokenInfo.name}</div>
+                <small className="font-bold text-grey-500 text-sm">{tokenInfo.symbol}</small>
               </div>
             </div>
             <h6 className="font-bold text-grey-900 leading-10">
