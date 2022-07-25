@@ -43,7 +43,7 @@ export const getPrivateKeyImports = () => {
   if (item) {
     return JSON.parse(item) as Record<string, AptosImportedWalletObject>;
   }
-  return {} as Record<string, AptosImportedWalletObject>;
+  return undefined;
 };
 
 export const storePrivateKeyImports = (item: Record<string, AptosImportedWalletObject>) => {

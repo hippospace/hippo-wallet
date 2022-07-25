@@ -31,7 +31,7 @@ interface AptosWalletContextType {
   aptosWalletAccounts: AptosWalletAccount[] | undefined;
   updateNetworkState: (network: AptosNetwork) => void;
   setWalletList: React.Dispatch<React.SetStateAction<WalletNameObject>>;
-  walletList: Record<string, AptosImportedWalletObject>;
+  walletList: Record<string, AptosImportedWalletObject> | undefined;
   addAccount: (walletName: string, importedAccount?: AptosAccount) => void;
   deleteAccount: (address: string) => void;
   updateAccountInfo: (address: string, walletName: string) => void;
@@ -45,8 +45,9 @@ interface TProviderProps {
 const AptosWalletContext = createContext<AptosWalletContextType>({} as AptosWalletContextType);
 
 const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
-  const [privateKeyImports, setPrivateKeyImports] =
-    useState<Record<string, AptosImportedWalletObject>>(getPrivateKeyImports);
+  const [privateKeyImports, setPrivateKeyImports] = useState<
+    Record<string, AptosImportedWalletObject> | undefined
+  >(getPrivateKeyImports);
   const [walletList, setWalletList] = useState<WalletNameObject>(getAptosWalletList);
   const [activeWallet, setActiveWallet] = useState<AptosWalletAccount | undefined>(undefined);
   const [aptosNetwork, setAptosNetwork] = useState<AptosNetwork | null>(() =>
@@ -69,7 +70,7 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
     let accounts = undefined;
     // console.log('refresh account 1:', seed, derivationPath);
     try {
-      if (seed && derivationPath) {
+      if (seed && derivationPath && privateKeyImports) {
         const importedAccountsPromise = await Promise.all(
           Object.keys(privateKeyImports).map(async (address, idx) => {
             const { ciphertext, nonce } = privateKeyImports[address];
