@@ -42,7 +42,7 @@ const ApproveSignatureForm: React.FC<TProps> = ({ txPayload, onApprove, onReject
   const [simulationResult, setSimulationResult] = useState(() => null as null | SimulationResult);
 
   const handleOnCancel = () => {
-    onReject(new Error('Connection is rejected by user'));
+    onReject(new Error('Transaction is rejected by user'));
   };
 
   const expiration_secs = Math.ceil(
