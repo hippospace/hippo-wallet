@@ -42,7 +42,7 @@ const ImportWallet: React.FC<TProps> = ({ onSuccess }) => {
   const formik = useFormik({
     initialValues: {
       privateKey: '',
-      walletName: `Wallet${aptosWalletAccounts.length + 1}`
+      walletName: `Wallet${(aptosWalletAccounts || []).length + 1}`
     },
     validationSchema: importWalletSchema,
     onSubmit

@@ -35,7 +35,7 @@ const WalletDetail: React.FC<TProps> = ({ onSuccess }) => {
   const [copied, setCopied] = useState(false);
   const [mnemonicCopied, setMnemonicCopied] = useState(false);
   const currentWalletName = useMemo(() => {
-    return aptosWalletAccounts.find((account) => account.address === activeWallet?.address)
+    return aptosWalletAccounts?.find((account) => account.address === activeWallet?.address)
       ?.walletName;
   }, [aptosWalletAccounts, activeWallet]);
   const handleOnClickCopy = (isMnemonic?: boolean) => {

@@ -28,7 +28,7 @@ interface AptosWalletContextType {
   activeWallet?: AptosWalletAccount;
   aptosNetwork: AptosNetwork | null;
   disconnect: () => void;
-  aptosWalletAccounts: AptosWalletAccount[];
+  aptosWalletAccounts: AptosWalletAccount[] | undefined;
   updateNetworkState: (network: AptosNetwork) => void;
   setWalletList: React.Dispatch<React.SetStateAction<WalletNameObject>>;
   walletList: Record<string, AptosImportedWalletObject>;
@@ -61,10 +61,13 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
   const {
     mnemonic: { seed, derivationPath, importsEncryptionKey }
   } = useUnlockedMnemonicAndSeed();
-  const [aptosWalletAccounts, setAptosWalletAccounts] = useState<AptosWalletAccount[]>([]);
+  const [aptosWalletAccounts, setAptosWalletAccounts] = useState<AptosWalletAccount[] | undefined>(
+    undefined
+  );
 
   const refreshAccounts = useCallback(async () => {
-    let accounts = [{} as AptosWalletAccount];
+    let accounts = undefined;
+    // console.log('refresh account 1:', seed, derivationPath);
     try {
       if (seed && derivationPath) {
         const importedAccountsPromise = await Promise.all(
@@ -109,7 +112,10 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
     } catch (err) {
       console.log('refresh account resources:: ', err);
     } finally {
-      setAptosWalletAccounts(accounts);
+      if (accounts) {
+        // console.log('refreshed accounts', accounts);
+        setAptosWalletAccounts(accounts);
+      }
     }
   }, [derivationPath, importsEncryptionKey, privateKeyImports, seed, walletList]);
 
@@ -120,11 +126,12 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
   // Set the current selected Aptos wallet
   const setActiveAptosWallet = useCallback(
     async (address?: string) => {
-      if (!aptosWalletAccounts || !aptosWalletAccounts.length)
+      if (!aptosWalletAccounts || !aptosWalletAccounts?.length)
         throw new Error('Please login first');
       let selectedWallet: AptosWalletAccount | undefined = aptosWalletAccounts[0];
+      // console.log('setActiveAptosWallet', aptosWalletAccounts, address);
       if (address) {
-        selectedWallet = aptosWalletAccounts.find((wallet) => wallet.address === address);
+        selectedWallet = aptosWalletAccounts?.find((wallet) => wallet.address === address);
       }
       if (!selectedWallet) throw new Error('Wallet not found');
       console.log(`Setting active wallet: ${JSON.stringify(selectedWallet)}`);
@@ -178,8 +185,9 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
         };
         setActiveWallet(selectedWallet);
         setWalletNameList(walletList);
-      } else if (currentWallet?.toString() && !activeWallet?.address) {
+      } else if (currentWallet?.toString() && !activeWallet?.address && aptosWalletAccounts) {
         // login existing account
+        // console.log('login existing account', currentWallet, aptosWalletAccounts);
         setActiveAptosWallet(currentWallet?.toString());
       } else if (!currentWallet?.toString() && !activeWallet?.address) {
         setActiveAptosWallet();
@@ -190,6 +198,7 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
     derivationPath,
     setActiveAptosWallet,
     privateKeyImports,
+    aptosWalletAccounts,
     addAccount,
     walletList,
     activeWallet?.address,
@@ -199,22 +208,24 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
   useEffect(() => {
     // This is used to listen on any updates of Mnemonic/Seed when new account is created/login
     loginAccount();
-  }, [seed, derivationPath]);
+  }, [seed, derivationPath, aptosWalletAccounts]);
 
   // Update wallet name
   const updateAccountInfo = useCallback(
     (address: string, walletName: string) => {
-      const walletIdx = aptosWalletAccounts.findIndex((acc) => acc.address === address);
-      const updatedWallets = { ...walletList, [walletIdx]: { walletName } };
-      setWalletList(updatedWallets);
-      setWalletNameList(updatedWallets);
+      const walletIdx = aptosWalletAccounts?.findIndex((acc) => acc.address === address);
+      if (walletIdx) {
+        const updatedWallets = { ...walletList, [walletIdx]: { walletName } };
+        setWalletList(updatedWallets);
+        setWalletNameList(updatedWallets);
+      }
     },
     [aptosWalletAccounts, walletList]
   );
 
   const deleteAccount = useCallback(
     async (address: string) => {
-      const walletIdx = aptosWalletAccounts.findIndex((acc) => acc.address === address);
+      const walletIdx = aptosWalletAccounts?.findIndex((acc) => acc.address === address);
       const currentWallets = { ...walletList };
       const filteredWallet = Object.keys(currentWallets).filter(
         (key) => parseInt(key) !== walletIdx
@@ -226,15 +237,17 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
           [currentIdx]: currentWallets[parseInt(current)]
         };
       }, {});
-      const selectedWallet: AptosWalletAccount | undefined = aptosWalletAccounts[0];
-      setCurrentWallet(selectedWallet.address);
+      const selectedWallet: AptosWalletAccount | undefined = aptosWalletAccounts
+        ? aptosWalletAccounts[0]
+        : undefined;
+      setCurrentWallet(selectedWallet?.address);
       let newPrivateKeyImports = { ...privateKeyImports };
       delete newPrivateKeyImports[address];
       storePrivateKeyImports(newPrivateKeyImports);
       setPrivateKeyImports(newPrivateKeyImports);
       setWalletList(updatedWallets);
       setWalletNameList(updatedWallets);
-      setActiveAptosWallet(selectedWallet.address);
+      setActiveAptosWallet(selectedWallet?.address);
     },
     [aptosWalletAccounts, privateKeyImports, setActiveAptosWallet, setCurrentWallet, walletList]
   );

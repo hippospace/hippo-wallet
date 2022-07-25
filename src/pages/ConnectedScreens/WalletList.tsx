@@ -58,14 +58,15 @@ const WalletList: React.FC<TProps> = ({ onSelect, onAddNew }) => {
   );
 
   const items: MenuProps['items'] = useMemo(() => {
-    const walletOptions = aptosWalletAccounts.map(({ walletName, address, isAccountRemoved }) => ({
-      label: optionLabel(walletName, address || '', isAccountRemoved),
-      key: address || '',
-      onClick: async () => {
-        await setActiveAptosWallet(address);
-        onSelect();
-      }
-    }));
+    const walletOptions =
+      aptosWalletAccounts?.map(({ walletName, address, isAccountRemoved }) => ({
+        label: optionLabel(walletName, address || '', isAccountRemoved),
+        key: address || '',
+        onClick: async () => {
+          await setActiveAptosWallet(address);
+          onSelect();
+        }
+      })) || [];
     return [
       ...walletOptions,
       {

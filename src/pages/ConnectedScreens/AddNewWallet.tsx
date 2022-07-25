@@ -33,7 +33,7 @@ const AddNewWallet: React.FC<TProps> = ({ onSuccess }) => {
   const onSubmit = async (values: TFormProps) => {
     try {
       const { walletName } = values;
-      if (aptosWalletAccounts.find((wallet) => wallet.walletName.includes(walletName))) {
+      if (aptosWalletAccounts?.find((wallet) => wallet.walletName.includes(walletName))) {
         formik.setFieldError('walletName', 'Wallet name is used');
         return false;
       }
@@ -59,7 +59,7 @@ const AddNewWallet: React.FC<TProps> = ({ onSuccess }) => {
 
   const formik = useFormik({
     initialValues: {
-      walletName: `Wallet${aptosWalletAccounts.length + 1}`
+      walletName: `Wallet${(aptosWalletAccounts || []).length + 1}`
     },
     validationSchema: createWalletSchema,
     onSubmit

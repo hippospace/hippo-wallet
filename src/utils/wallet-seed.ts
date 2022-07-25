@@ -78,6 +78,7 @@ let unlockedMnemonicAndSeed = (async () => {
   if (stored === null) {
     return EMPTY_MNEMONIC;
   }
+  // console.log('check unlockedMnemonicAndSeed', stored);
   return {
     importsEncryptionKey: deriveImportsEncryptionKey(stored.seed),
     ...stored

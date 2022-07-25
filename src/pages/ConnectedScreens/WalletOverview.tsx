@@ -22,7 +22,7 @@ const WalletOverview: React.FC<TProps> = ({ onShowWalletList }) => {
     [privateKeyObject]
   );
   const walletName = useMemo(() => {
-    return aptosWalletAccounts.find((account) => account.address === activeWallet?.address)
+    return aptosWalletAccounts?.find((account) => account.address === activeWallet?.address)
       ?.walletName;
   }, [aptosWalletAccounts, activeWallet]);
   const [copied, setCopied] = useState(credentials.map((c) => ({ [c.key]: false })));
