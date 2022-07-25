@@ -9,7 +9,7 @@ interface TProps {
 
 const WalletOverview: React.FC<TProps> = ({ onShowWalletList }) => {
   const { activeWallet, aptosWalletAccounts } = useAptosWallet();
-  console.log(`activeWallet: ${JSON.stringify(activeWallet)}`);
+  // console.log(`activeWallet: ${JSON.stringify(activeWallet)}`);
   const privateKeyObject = activeWallet?.aptosAccount?.toPrivateKeyObject();
   const credentials = useMemo(
     () => [

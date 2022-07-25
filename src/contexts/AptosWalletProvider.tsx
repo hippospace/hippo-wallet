@@ -166,6 +166,7 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
       if (!privateKeyImports || !Object.keys(privateKeyImports).length) {
         // create new account when there is no other accounts imported
         const account = createNewAccount();
+        console.log('create new account');
         await faucetClient.fundAccount(account.address(), 0);
         const newWalletAccount = walletList[0];
         const privateKeyObj = account?.toPrivateKeyObject();
@@ -198,7 +199,7 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
   useEffect(() => {
     // This is used to listen on any updates of Mnemonic/Seed when new account is created/login
     loginAccount();
-  }, [aptosWalletAccounts, loginAccount, seed, derivationPath]);
+  }, [seed, derivationPath]);
 
   // Update wallet name
   const updateAccountInfo = useCallback(
