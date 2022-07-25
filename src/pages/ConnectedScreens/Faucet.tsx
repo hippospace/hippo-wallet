@@ -2,6 +2,7 @@ import Button from 'components/Button';
 import CoinIcon from 'components/CoinIcon';
 import useHippoClient from 'hooks/useHippoClient';
 import { useCallback, useMemo, useState } from 'react';
+import { u8str } from 'utils/hippoWalletUtil';
 
 const Faucet: React.FC = () => {
   const [loading, setLoading] = useState('');
@@ -18,10 +19,11 @@ const Faucet: React.FC = () => {
 
   const renderTokenList = useMemo(() => {
     if (tokenStores && tokenInfos) {
+      console.log(tokenInfos);
       return Object.keys(tokenInfos)
         .filter((symbol) => {
           return (
-            tokenInfos[symbol].token_type.module_name.toString().startsWith('MockCoin') ||
+            u8str(tokenInfos[symbol].token_type.module_name).startsWith('mock_coin') ||
             symbol === 'APTOS'
           );
         })

@@ -167,7 +167,7 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
         // create new account when there is no other accounts imported
         const account = createNewAccount();
         console.log('create new account');
-        await faucetClient.fundAccount(account.address(), 0);
+        await faucetClient.fundAccount(account.address(), 10000);
         const newWalletAccount = walletList[0];
         const privateKeyObj = account?.toPrivateKeyObject();
         await addAccount(undefined, account);

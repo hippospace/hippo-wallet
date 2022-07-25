@@ -35,3 +35,12 @@ export const getJointName = (xTag: TypeTag, yTag: TypeTag) => {
   const [xFullname, yFullname] = [xTag, yTag].map(getTypeTagFullname);
   return `${xFullname}/${yFullname}`;
 };
+
+interface U8 {
+  value: bigInt.BigInteger;
+}
+
+export const u8str = (arr: U8[]) => {
+  const array = new Uint8Array(arr.map((u) => u.value.toJSNumber()));
+  return new TextDecoder().decode(array);
+};
