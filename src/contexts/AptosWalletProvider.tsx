@@ -70,7 +70,7 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
         const importedAccountsPromise = await Promise.all(
           Object.keys(privateKeyImports).map(async (address, idx) => {
             const { ciphertext, nonce } = privateKeyImports[address];
-            let aptosAccount = {} as AptosAccount;
+            let aptosAccount = null;
             if (importsEncryptionKey) {
               const privateKey = nacl.secretbox.open(
                 bs58.decode(ciphertext),
@@ -85,8 +85,7 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
             if (!wallet) {
               return {
                 address: '',
-                walletName: 'INVALID_WALLET_NAME_',
-                aptosAccount
+                walletName: 'INVALID_WALLET_NAME_'
               };
             }
 
@@ -99,7 +98,7 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
             return {
               address: address,
               walletName: wallet.walletName,
-              aptosAccount,
+              aptosAccount: aptosAccount || undefined,
               isAccountRemoved: !accountResource
             };
           })
@@ -128,6 +127,7 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
         selectedWallet = aptosWalletAccounts.find((wallet) => wallet.address === address);
       }
       if (!selectedWallet) throw new Error('Wallet not found');
+      console.log(`Setting active wallet: ${JSON.stringify(selectedWallet)}`);
       setActiveWallet(selectedWallet);
     },
     [setActiveWallet, aptosWalletAccounts]

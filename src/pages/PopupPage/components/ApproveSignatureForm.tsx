@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { getTypeTagFullname, parseTypeTagOrThrow, StructTag } from '@manahippo/aptos-tsgen';
-import { X0x1 } from '@manahippo/hippo-sdk';
+import { aptos_framework } from '@manahippo/hippo-sdk';
 import { Types } from 'aptos';
 import {
   ScriptFunctionPayload,
@@ -109,20 +109,24 @@ const ApproveSignatureForm: React.FC<TProps> = ({ txPayload, onApprove, onReject
             const coinTypeTag = (tag as unknown as StructTag).typeParams[0] as unknown as StructTag;
             const fullname = getTypeTagFullname(coinTypeTag);
             const repo = hippoWallet.repo;
-            const coin = X0x1.Coin.CoinStore.CoinStoreParser(resource.data.data, tag, repo);
-            const newBalance = coin.coin.value.toJSNumber();
+            const coin = aptos_framework.coin$_.CoinStore.CoinStoreParser(
+              resource.data.data,
+              tag,
+              repo
+            );
+            const newBalance = coin.coin.value.toJsNumber();
             let oldStore = hippoWallet.fullnameToCoinStore[fullname];
             let oldBalance = 0;
             if (oldStore) {
-              oldBalance = oldStore.coin.value.toJSNumber();
+              oldBalance = oldStore.coin.value.toJsNumber();
             }
             const deltaBalance = newBalance - oldBalance;
             const tokenInfo = hippoWallet.fullnameToTokenInfo[fullname];
             let deltaUiAmt = deltaBalance;
             let coinSymbol = coinTypeTag.name;
             if (tokenInfo) {
-              deltaUiAmt = deltaUiAmt / Math.pow(10, tokenInfo.decimals);
-              coinSymbol = tokenInfo.symbol;
+              deltaUiAmt = deltaUiAmt / Math.pow(10, tokenInfo.decimals.toJsNumber());
+              coinSymbol = tokenInfo.symbol.str();
             }
             balanceChanges.push({
               symbol: coinSymbol,

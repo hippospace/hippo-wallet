@@ -31,12 +31,17 @@ const Faucet: React.FC = () => {
           return (
             <div className="py-2 px-3.5 flex bg-grey-100 justify-between h-[56px]" key={symbol}>
               <div className="flex gap-3 justify-center items-center">
-                <CoinIcon logoSrc={tokenInfo.logo_url} />
-                <div className="font-bold text-grey-900">{tokenInfo.name}</div>
+                <CoinIcon logoSrc={tokenInfo.logo_url.str()} />
+                <div className="font-bold text-grey-900">{tokenInfo.name.str()}</div>
               </div>
               <div className="flex gap-4 justify-center items-center">
                 <small className="text-grey-700 font-bold uppercase">
-                  {`${store ? store.coin.value.toJSNumber() / Math.pow(10, tokenInfo.decimals) : 0} 
+                  {`${
+                    store
+                      ? store.coin.value.toJsNumber() /
+                        Math.pow(10, tokenInfo.decimals.toJsNumber())
+                      : 0
+                  } 
                   ${symbol}`}{' '}
                 </small>
                 <Button

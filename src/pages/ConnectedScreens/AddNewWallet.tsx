@@ -1,3 +1,4 @@
+import { AptosAccount } from 'aptos';
 import { Form } from 'components/Antd';
 import Button from 'components/Button';
 import TextInput from 'components/TextInput';
@@ -37,8 +38,17 @@ const AddNewWallet: React.FC<TProps> = ({ onSuccess }) => {
         return false;
       }
       setIsAccountBeingCreated(true);
-      const account = createNewAccount();
-      await faucetClient.fundAccount(account.address(), 0);
+      let account: AptosAccount | null = null;
+      while (!account) {
+        try {
+          account = createNewAccount();
+          console.log(`Funding account ${account.address().toString()}`);
+          await faucetClient.fundAccount(account.address(), 10000);
+        } catch (e) {
+          console.log('Faucet request failed. Repeating...');
+          account = null;
+        }
+      }
       await addAccount(walletName, account);
       setIsAccountBeingCreated(false);
       onSuccess();
