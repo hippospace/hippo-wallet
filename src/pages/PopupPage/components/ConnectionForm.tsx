@@ -6,20 +6,20 @@ import { isExtension, walletAddressEllipsis } from 'utils/utility';
 
 interface TProps {
   origin: string;
-  onApprove: (detail: any) => void;
-  onReject: (error: any) => void;
+  onApprove: (detail: any) => Promise<void>;
+  onReject: (error: any) => Promise<void>;
 }
 
 const ConnectionForm: React.FC<TProps> = ({ origin, onApprove, onReject }) => {
   const { activeWallet } = useAptosWallet();
 
-  const handleOnCancel = () => {
-    onReject(new Error('Connection is rejected by user'));
+  const handleOnCancel = async () => {
+    await onReject(new Error('Connection is rejected by user'));
   };
 
-  const handleOnClick = () => {
+  const handleOnClick = async () => {
     if (isExtension) {
-      chrome.storage.local.get('connectedAddress', (result) => {
+      chrome.storage.local.get('connectedAddress', async (result) => {
         // TODO better way to do this
         const connectedAddress = {
           ...(result.connectedAddress || {}),
@@ -29,8 +29,8 @@ const ConnectionForm: React.FC<TProps> = ({ origin, onApprove, onReject }) => {
             authKey: activeWallet?.aptosAccount?.authKey()?.toString()
           }
         };
-        chrome.storage.local.set({ connectedAddress });
-        onApprove({ ...connectedAddress[origin], id: 1 });
+        await chrome.storage.local.set({ connectedAddress });
+        await onApprove({ ...connectedAddress[origin], id: 1 });
       });
     }
   };
@@ -60,7 +60,7 @@ const ConnectionForm: React.FC<TProps> = ({ origin, onApprove, onReject }) => {
         </h5> */}
         <div className="w-full flex flex-col items-center">
           <LogoIcon className="mt-8 w-[120px] h-[120px]" />
-          <h4 className="font-bold text-grey-900 my-8">
+          <h4 className="font-bold text-grey-900 my-8 text-center">
             Allow this site to access your Hippo account?
           </h4>
           {renderConnectionDetail}

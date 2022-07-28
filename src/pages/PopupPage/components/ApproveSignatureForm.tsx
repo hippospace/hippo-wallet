@@ -20,8 +20,8 @@ import styles from '../TransactionModal.module.scss';
 
 interface TProps {
   txPayload: UserTransactionRequest | undefined;
-  onApprove: (detail: any) => void;
-  onReject: (error: any) => void;
+  onApprove: (detail: any) => Promise<void>;
+  onReject: (error: any) => Promise<void>;
 }
 
 type CoinBalanceChange = {
@@ -41,8 +41,8 @@ const ApproveSignatureForm: React.FC<TProps> = ({ txPayload, onApprove, onReject
   const [loading, setLoading] = useState(false);
   const [simulationResult, setSimulationResult] = useState(() => null as null | SimulationResult);
 
-  const handleOnCancel = () => {
-    onReject(new Error('Transaction is rejected by user'));
+  const handleOnCancel = async () => {
+    await onReject(new Error('Transaction is rejected by user'));
   };
 
   const expiration_secs = Math.ceil(
@@ -65,7 +65,7 @@ const ApproveSignatureForm: React.FC<TProps> = ({ txPayload, onApprove, onReject
           txnResult.hash
         )) as Types.UserTransaction;
         await hippoWallet?.refreshStores();
-        onApprove({ method: 'success', detail: txDetails, id: 1 });
+        await onApprove({ method: 'success', detail: txDetails, id: 1 });
         // unloadHandler();
       } else {
         throw new Error('Please login first');
@@ -200,7 +200,7 @@ const ApproveSignatureForm: React.FC<TProps> = ({ txPayload, onApprove, onReject
         </h5> */}
         <div className="w-full flex flex-col items-center">
           <LogoIcon className="mt-8 w-[120px] h-[120px]" />
-          <h4 className="font-bold text-grey-900 my-8">Transaction Confirmation</h4>
+          <h4 className="font-bold text-grey-900 my-8 text-center">Transaction Confirmation</h4>
           {renderTransactionDetail}
         </div>
         <div className="flex w-full justify-between gap-10">

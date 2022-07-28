@@ -10,9 +10,10 @@ function launchPopup(message, sender, sendResponse) {
   const searchParams = new URLSearchParams();
   searchParams.set('request', request);
   searchParams.set('origin', sender.origin);
+  searchParams.set('isPopUp', true);
 
-  chrome.windows.getLastFocused((focusedWindow) => {
-    chrome.windows.create({
+  chrome.windows.getLastFocused(async (focusedWindow) => {
+    await chrome.windows.create({
       url: 'index.html?' + searchParams.toString(),
       type: 'popup',
       width: 375,

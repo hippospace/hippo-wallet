@@ -49,9 +49,9 @@ const PopupPage: React.FC<TProps> = ({ opener }) => {
   const [txPayload, setTxPayload] = useState<UserTransactionRequest | undefined>();
   const [loading, setLoading] = useState(false);
   const postMessage = useCallback(
-    (message: any) => {
+    async (message: any) => {
       if (isExtension) {
-        chrome.runtime.sendMessage({
+        await chrome.runtime.sendMessage({
           channel: 'hippo_extension_background_channel',
           data: message
         });
@@ -113,22 +113,21 @@ const PopupPage: React.FC<TProps> = ({ opener }) => {
   };
 
   const onApprove = async (txDetails: any) => {
-    postMessage(txDetails);
+    await postMessage(txDetails);
     onCancel();
   };
 
-  const onReject = (error: any) => {
+  const onReject = async (error: any) => {
     let errorMsg = '';
     if (error instanceof RequestError) {
       errorMsg = error.response?.data.message;
     } else if (error instanceof Error) {
       errorMsg = error.message;
     }
-    postMessage({ method: 'fail', error: errorMsg, id: 1 });
+    await postMessage({ method: 'fail', error: errorMsg, id: 1 });
     onCancel();
   };
 
-  console.log('checkkkkk>>>', isExtension, txRequest?.method, origin);
   if (isExtension && txRequest?.method === 'connect' && origin) {
     return <ConnectionForm origin={origin} onApprove={onApprove} onReject={onReject} />;
   }

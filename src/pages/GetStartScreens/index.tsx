@@ -5,13 +5,22 @@ import { useHasLockedMnemonicAndSeed } from 'utils/wallet-seed';
 import CreateWallet from './CreateWallet';
 import WalletLogin from './WalletLogin';
 import RestoreWallet from './RestoreWallet';
+import { Spin } from 'components/Antd';
+import { LoadingOutlined } from '@ant-design/icons';
 
 const GetStartScreens: React.FC = () => {
   const [page, setPage] = usePage();
   const [hasLockedMnemonicAndSeed, loading] = useHasLockedMnemonicAndSeed();
 
   if (loading) {
-    return null;
+    return (
+      <div className="flex w-full justify-center pt-12">
+        <Spin
+          className="mt-6"
+          indicator={<LoadingOutlined style={{ fontSize: 48, color: '#fff' }} spin />}
+        />
+      </div>
+    );
   }
 
   if (page === 'restoreWallet') {
