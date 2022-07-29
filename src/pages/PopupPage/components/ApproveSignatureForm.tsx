@@ -81,8 +81,10 @@ const ApproveSignatureForm: React.FC<TProps> = ({ txPayload, onApprove, onReject
   useEffect(() => {
     const simulateBalanceChange = async () => {
       if (!(activeWallet?.aptosAccount && txPayload && hippoWallet && !loading)) {
+        console.log('Skipping simulation');
         return null;
       }
+      console.log('Running simulation');
       const output = await aptosClient.simulateTransaction(activeWallet.aptosAccount, {
         ...txPayload,
         expiration_timestamp_secs: (
@@ -99,13 +101,16 @@ const ApproveSignatureForm: React.FC<TProps> = ({ txPayload, onApprove, onReject
       } else {
         // walk through the changeset to figure out how wallet balance is affected:
         for (const change of output.changes) {
+          console.log(change);
           if (
             change.type === 'write_resource' &&
-            (change as WriteResource).data.type.startsWith('0x1::Coin::CoinStore')
+            (change as WriteResource).data.type.startsWith('0x1::coin::CoinStore')
           ) {
             // this is a change to coin-balance
             const resource = change as WriteResource;
             const tag = parseTypeTagOrThrow(resource.data.type);
+            console.log(resource.data.type);
+            console.log(`tag: ${JSON.stringify(tag)}`);
             const coinTypeTag = (tag as unknown as StructTag).typeParams[0] as unknown as StructTag;
             const fullname = getTypeTagFullname(coinTypeTag);
             const repo = hippoWallet.repo;
@@ -142,7 +147,7 @@ const ApproveSignatureForm: React.FC<TProps> = ({ txPayload, onApprove, onReject
       }
     };
     simulateBalanceChange();
-  }, [txPayload, hippoWallet, activeWallet?.aptosAccount, expiration_secs]);
+  }, [txPayload, hippoWallet, activeWallet?.aptosAccount, expiration_secs, loading]);
 
   const renderTransactionDetail = useMemo(() => {
     if (!txPayload) return null;

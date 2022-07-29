@@ -1552,20 +1552,20 @@
     decimal.js "^10.3.1"
     path "^0.12.7"
 
-"@manahippo/hippo-sdk@^0.0.29":
-  version "0.0.29"
-  resolved "https://registry.yarnpkg.com/@manahippo/hippo-sdk/-/hippo-sdk-0.0.29.tgz#f6bf8b303a44667d1cedf99c9adc5d5a7c91da30"
-  integrity sha512-7ugVoqg1TN1IzVaNsev7Y2EZsZ/hvFI3Gcw9Vtu69sV4S08HXfejvPZvbABApVkhtt9FpEpYgTITAGNTuSp/4A==
+"@manahippo/hippo-sdk@^0.0.32":
+  version "0.0.32"
+  resolved "https://registry.yarnpkg.com/@manahippo/hippo-sdk/-/hippo-sdk-0.0.32.tgz#460af7e88601f192c818aa8a0121cb521e547fa7"
+  integrity sha512-waAYmhxo28YJ7UVIwOV4VJTPljFr5E/dRP1nHSnkpf0vsT86yrwcMvlziKecck4tVrY/ZBlcSFGgv4n/v4BPxQ==
   dependencies:
-    "@manahippo/move-to-ts" "^0.0.55"
+    "@manahippo/move-to-ts" "^0.0.60"
     aptos "1.2.0"
     commander "^9.3.0"
     yaml "^2.1.1"
 
-"@manahippo/move-to-ts@^0.0.55":
-  version "0.0.55"
-  resolved "https://registry.yarnpkg.com/@manahippo/move-to-ts/-/move-to-ts-0.0.55.tgz#bd08286bb83500888710c2c3c7561cd24b51cf83"
-  integrity sha512-8jXkm27pAy6QdPSRMgugAPWfUzFMdIUgsH73pY+52i2v3fOuIC76kW2XBdiOymG6g5+NN6gPIGEAXCtR1APtxQ==
+"@manahippo/move-to-ts@^0.0.60":
+  version "0.0.60"
+  resolved "https://registry.yarnpkg.com/@manahippo/move-to-ts/-/move-to-ts-0.0.60.tgz#161644f35ed4784dba9d2154b70dacd0e17d8f88"
+  integrity sha512-glnSA4mKerNTCreO9We6TOwb81kK6ny2ElBY0wnpXts1aMCVXJQ2jv3ZHZZghqD1Vy8yUQwgRyg0temsVQ3OGw==
   dependencies:
     aptos "^1.2.0"
     big-integer "^1.6.51"

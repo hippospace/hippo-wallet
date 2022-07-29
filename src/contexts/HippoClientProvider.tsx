@@ -7,7 +7,7 @@ import {
   UITokenAmount,
   aptos_framework
 } from '@manahippo/hippo-sdk';
-import { token_registry$_ } from '@manahippo/hippo-sdk/dist/generated/token_registry';
+import { coin_registry$_ } from '@manahippo/hippo-sdk/dist/generated/coin_registry';
 import useAptosWallet from 'hooks/useAptosWallet';
 import { aptosClient, faucetClient } from 'config/aptosClient';
 import { sendPayloadTx } from 'utils/hippoWalletUtil';
@@ -20,7 +20,7 @@ interface HippoClientContextType {
   hippoWallet?: HippoWalletClient;
   hippoSwap?: HippoSwapClient;
   tokenStores?: Record<string, aptos_framework.coin$_.CoinStore>;
-  tokenInfos?: Record<string, token_registry$_.TokenInfo>;
+  tokenInfos?: Record<string, coin_registry$_.TokenInfo>;
   requestFaucet: (symbol: string, uiAmount: string) => {};
   requestSwap: (fromSymbol: string, toSymbol: string, uiAmtIn: number, uiAmtOutMin: number) => {};
   requestDeposit: (
@@ -57,7 +57,7 @@ const HippoClientProvider: FC<TProviderProps> = ({ children }) => {
   const [transaction, setTransaction] = useState<TTransaction>();
   const [tokenStores, setTokenStores] =
     useState<Record<string, aptos_framework.coin$_.CoinStore>>();
-  const [tokenInfos, setTokenInfos] = useState<Record<string, token_registry$_.TokenInfo>>();
+  const [tokenInfos, setTokenInfos] = useState<Record<string, coin_registry$_.TokenInfo>>();
   const [isLoading, setIsLoading] = useState(false);
 
   const getHippoWalletClient = useCallback(async () => {
