@@ -8,9 +8,9 @@ const useTokenBalane = (tokenSymbol: string | undefined) => {
     if (!tokenSymbol) return 0;
     if (tokenInfos && tokenStores) {
       const inputToken = tokenInfos[tokenSymbol];
-      const tokenStore = tokenStores[inputToken.symbol];
+      const tokenStore = tokenStores[inputToken.symbol.str()];
       return tokenStore && inputToken
-        ? tokenStore.coin.value.toJSNumber() / Math.pow(10, inputToken.decimals)
+        ? tokenStore.coin.value.toJsNumber() / Math.pow(10, inputToken.decimals.toJsNumber())
         : 0;
     } else {
       return 0;

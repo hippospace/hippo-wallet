@@ -12,13 +12,13 @@ const OrderReview: FC = () => {
       <div className="bg-grey-300 rounded-lg mb-2 px-2 py-4">
         <div className="text-base font-bold mb-1 text-gray-500">You pay</div>
         <div className="text-2xl font-bold">
-          {inputStore.amount} {inputStore.token?.symbol}
+          {inputStore.amount} {inputStore.token?.symbol.str()}
         </div>
       </div>
       <div className="bg-grey-300 rounded-lg px-2 py-4 mb-4">
         <div className="text-base font-bold mb-1 text-gray-500">You receive</div>
         <div className="text-2xl font-bold">
-          {output.amount} {output.token?.symbol}
+          {output.amount} {output.token?.symbol.str()}
         </div>
       </div>
       <SwapDetail />

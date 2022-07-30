@@ -1,3 +1,4 @@
+import { TokenInfo } from '@manahippo/hippo-sdk/dist/generated/coin_registry/coin_registry';
 import { message } from 'antd';
 import ActionSheet from 'components/ActionSheet';
 import Button from 'components/Button';
@@ -10,7 +11,6 @@ import InputWithTokenSelector from './InputWithTokenSelector';
 import OrderReview from './OrderReview';
 import useSwapStore from './store';
 import SwapDetail from './SwapDetail';
-import { TokenInfo } from '@manahippo/hippo-sdk/dist/generated/X0xf70ac33c984f8b7bead655ad239d246f1c0e3ca55fe0b8bfc119aa529c4630e8/TokenRegistry';
 
 const Swap: FC = () => {
   const { tokenInfos, hippoSwap, requestSwap } = useHippoClient();
@@ -62,10 +62,10 @@ const Swap: FC = () => {
     const toSymbol = output.token?.symbol;
     const fromUiAmt = input.amount;
     if (hippoSwap && fromSymbol && toSymbol && fromUiAmt) {
-      const quote = hippoSwap.getBestQuoteBySymbols(fromSymbol, toSymbol, fromUiAmt, 3);
+      const quote = hippoSwap.getBestQuoteBySymbols(fromSymbol.str(), toSymbol.str(), fromUiAmt, 3);
       if (quote) {
         const minOut = quote.bestQuote.outputUiAmt * (1 - swapSettings.slippageTolerance / 100);
-        await requestSwap(fromSymbol, toSymbol, fromUiAmt, minOut);
+        await requestSwap(fromSymbol.str(), toSymbol.str(), fromUiAmt, minOut);
         setInputAmount(0);
         setIsReviewOrderVisible(false);
         // TODO: in process window
@@ -88,7 +88,7 @@ const Swap: FC = () => {
 
   const [isReviewOrderVisible, setIsReviewOrderVisible] = useState(false);
 
-  const [inputTokenBalance] = useTokenBalane(inputToken?.symbol);
+  const [inputTokenBalance] = useTokenBalane(inputToken?.symbol.str());
 
   const isSwapDisabled = !inputAmount || inputAmount > inputTokenBalance;
 

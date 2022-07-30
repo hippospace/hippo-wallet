@@ -1,4 +1,3 @@
-import { TokenInfo } from '@manahippo/hippo-sdk/dist/generated/X0xf70ac33c984f8b7bead655ad239d246f1c0e3ca55fe0b8bfc119aa529c4630e8/TokenRegistry';
 import ActionSheet from 'components/ActionSheet';
 import CoinIcon from 'components/CoinIcon';
 import TokenLabel from 'components/TokenLabel';
@@ -6,6 +5,7 @@ import TokenListRow from 'components/TokenAmountRow';
 import useHippoClient from 'hooks/useHippoClient';
 import { FC, useCallback, useState } from 'react';
 import { CaretIcon } from 'resources/icons';
+import { TokenInfo } from '@manahippo/hippo-sdk/dist/generated/coin_registry/coin_registry';
 
 export interface TokenSelectorProps {
   currentToken?: TokenInfo;
@@ -56,7 +56,7 @@ const TokenSelector: FC<TokenSelectorProps> = ({
                     <CoinIcon
                       key={`coin-icon-${s}`}
                       className="mr-2 last:mr-0"
-                      logoSrc={token.logo_url}
+                      logoSrc={token.logo_url.str()}
                       onClick={() => onTokenListRowClick(token)}
                     />
                   )
@@ -73,7 +73,9 @@ const TokenSelector: FC<TokenSelectorProps> = ({
                   const text = e.target.value;
                   if (tokenInfos) {
                     setFilteredTokens(
-                      Object.values(tokenInfos).filter((t) => new RegExp(text, 'i').test(t.symbol))
+                      Object.values(tokenInfos).filter((t) =>
+                        new RegExp(text, 'i').test(t.symbol.str())
+                      )
                     );
                   }
                 }}
@@ -89,13 +91,13 @@ const TokenSelector: FC<TokenSelectorProps> = ({
                 (ti) =>
                   !excludeTokens.map((t) => t.symbol).includes(ti.symbol) &&
                   (ti.token_type.module_name.toString().startsWith('MockCoin') ||
-                    ti.symbol === 'APTOS')
+                    ti.symbol.str() === 'APTOS')
               )
               .map((ti) => {
                 return (
                   <TokenListRow
                     className="mb-2 rounded-md last:mb-0"
-                    key={ti.symbol}
+                    key={ti.symbol.str()}
                     token={ti}
                     onClick={() => onTokenListRowClick(ti)}
                   />

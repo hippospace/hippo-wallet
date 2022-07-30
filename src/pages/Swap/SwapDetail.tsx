@@ -19,8 +19,8 @@ const SwapDetail: React.FC = () => {
       const toSymbol = outputStore.token.symbol;
 
       const quote = hippoClient.hippoSwap.getBestQuoteBySymbols(
-        fromSymbol,
-        toSymbol,
+        fromSymbol.str(),
+        toSymbol.str(),
         inputStore.amount,
         3
       );
