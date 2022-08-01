@@ -13,10 +13,12 @@ export async function sendPayloadTx(
   client: AptosClient,
   account: AptosAccount,
   payload: Types.TransactionPayload,
-  max_gas = 1000
+  max_gas = 1000,
+  expirationSeconds = 10
 ) {
   const txnRequest = await client.generateTransaction(account.address(), payload, {
-    max_gas_amount: `${max_gas}`
+    max_gas_amount: `${max_gas}`,
+    expiration_timestamp_secs: `${Math.floor(new Date().getTime() / 1000) + expirationSeconds}`
   });
   const signedTxn = await client.signTransaction(account, txnRequest);
   const txnResult = await client.submitTransaction(signedTxn);

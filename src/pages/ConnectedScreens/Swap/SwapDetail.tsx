@@ -64,16 +64,12 @@ const SwapDetail: React.FC<ISwapDetailProps> = ({ wouldShowSimulationResult = fa
               minReceivedNum
             );
             const txnRequest = await aptosClient.generateTransaction(account.address(), payload, {
-              max_gas_amount: `${maxGasFee}`
+              max_gas_amount: `${maxGasFee}`,
+              expiration_timestamp_secs: `${
+                Math.floor(new Date().getTime() / 1000) + expireMinutes * 60
+              }`
             });
-            const output = await aptosClient.simulateTransaction(account, {
-              ...txnRequest,
-              expiration_timestamp_secs: (
-                Math.floor(new Date().getTime() / 1000) +
-                expireMinutes * 60
-              ).toString()
-            });
-            console.log('Simulate output', output);
+            const output = await aptosClient.simulateTransaction(account, txnRequest);
 
             setTxSimuRes({
               success: output.success,

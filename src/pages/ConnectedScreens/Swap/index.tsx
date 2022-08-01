@@ -24,6 +24,8 @@ const Swap: FC = () => {
   const swapSettings = useSwapStore((state) => state.settings);
   const [inputToken, setInputToken] = useState(input.token);
   const [outputToken, setOutputToken] = useState(output.token);
+  const expireMinutes = useSwapStore((state) => state.settings.txDeadline);
+  const maxGasFee = useSwapStore((state) => state.settings.maxGasFee);
 
   const [swapStatus, setSwapStatus] = useState<SwapStatus>('ready');
 
@@ -73,7 +75,14 @@ const Swap: FC = () => {
         );
         if (quote) {
           const minOut = quote.bestQuote.outputUiAmt * (1 - swapSettings.slippageTolerance / 100);
-          await requestSwap(fromSymbol.str(), toSymbol.str(), fromUiAmt, minOut);
+          await requestSwap(
+            fromSymbol.str(),
+            toSymbol.str(),
+            fromUiAmt,
+            minOut,
+            maxGasFee,
+            expireMinutes * 60
+          );
           setInputAmount(0);
           setIsReviewOrderVisible(false);
           setSwapStatus('success');
@@ -85,9 +94,11 @@ const Swap: FC = () => {
       setSwapStatus('failed');
     }
   }, [
+    expireMinutes,
     hippoSwap,
     input.amount,
     input.token?.symbol,
+    maxGasFee,
     output.token?.symbol,
     requestSwap,
     swapSettings.slippageTolerance

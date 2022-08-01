@@ -6,7 +6,7 @@
     "@ant-design/icons": "^4.7.0",
     "@craco/craco": "^6.4.3",
     "@manahippo/aptos-tsgen": "^0.0.41",
-    "@manahippo/hippo-sdk": "^0.0.32",
+    "@manahippo/hippo-sdk": "^0.1.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
     "@testing-library/user-event": "^13.2.1",

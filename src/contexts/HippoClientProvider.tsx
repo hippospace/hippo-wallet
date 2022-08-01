@@ -26,7 +26,9 @@ interface HippoClientContextType {
     fromSymbol: string,
     toSymbol: string,
     uiAmtIn: number,
-    uiAmtOutMin: number
+    uiAmtOutMin: number,
+    maxGas: number,
+    expirationSecs: number
   ) => Promise<void>;
   requestDeposit: (
     lhsSymbol: string,
@@ -143,7 +145,14 @@ const HippoClientProvider: FC<TProviderProps> = ({ children }) => {
   // })
 
   const requestSwap = useCallback(
-    async (fromSymbol: string, toSymbol: string, uiAmtIn: number, uiAmtOutMin: number) => {
+    async (
+      fromSymbol: string,
+      toSymbol: string,
+      uiAmtIn: number,
+      uiAmtOutMin: number,
+      maxGas: number,
+      expirationSecs: number
+    ) => {
       try {
         if (!activeWallet || !activeWallet.aptosAccount || !hippoSwap)
           throw new Error('Please login first');
@@ -158,7 +167,13 @@ const HippoClientProvider: FC<TProviderProps> = ({ children }) => {
         const transactionInfo = { [fromSymbol]: uiAmtIn, [toSymbol]: uiAmtOutMin };
         if (payload) {
           setTransaction({ type: 'swap', payload, transactionInfo });
-          await sendPayloadTx(aptosClient, activeWallet.aptosAccount, payload);
+          await sendPayloadTx(
+            aptosClient,
+            activeWallet.aptosAccount,
+            payload,
+            maxGas,
+            expirationSecs
+          );
           await hippoWallet?.refreshStores();
           setRefresh(true);
           message.success('Swap successfully');

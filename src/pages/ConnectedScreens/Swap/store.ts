@@ -39,7 +39,7 @@ const useSwapStore = create(
       settings: {
         slippageTolerance: 1,
         txDeadline: 1,
-        maxGasFee: 100
+        maxGasFee: 1000
       },
       setInput: (ta: ITokenAmounts) =>
         set((state) => {
