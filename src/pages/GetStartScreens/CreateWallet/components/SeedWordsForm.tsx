@@ -60,7 +60,7 @@ const SeedWordsForm: React.FC<TProps> = ({ goForward }) => {
             handleOnClickCopy();
             setFieldValue('copied', true);
           }}>
-          <Button className="font-bold py-2">
+          <Button className="font-bold py-2" id="copy-mnemoic">
             <div className="text-sm">
               {copied ? 'Succesfully Copied' : 'Copy to clipboard (Required)'}
             </div>
@@ -68,6 +68,7 @@ const SeedWordsForm: React.FC<TProps> = ({ goForward }) => {
         </CopyToClipboard>
         <CheckboxInput
           checked={values.understood}
+          id="understood"
           onChange={(e) => setFieldValue('understood', e.target.checked)}>
           <div className="helpText text-grey-100">
             I understand that if I lose my secret phrase, I’ll lose all of the crypto in my wallet.
@@ -76,6 +77,7 @@ const SeedWordsForm: React.FC<TProps> = ({ goForward }) => {
       </div>
       <div className="py-4 mt-auto">
         <Button
+          id="continue-btn"
           className="w-full"
           disabled={!values.copied || !values.understood}
           onClick={goForward}>

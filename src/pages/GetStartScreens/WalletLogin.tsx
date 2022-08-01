@@ -5,6 +5,7 @@ import { useFormik } from 'formik';
 import LogoIcon from 'components/LogoIcon';
 import * as yup from 'yup';
 import { loadMnemonicAndSeed } from 'utils/wallet-seed';
+import { useNavigate } from 'react-router-dom';
 // import CheckboxInput from 'components/CheckboxInput';
 
 interface TFormProps {
@@ -12,9 +13,9 @@ interface TFormProps {
   stayLoggedIn: boolean;
 }
 
-interface TProps {
-  onRecoverPassword: () => void;
-}
+// interface TProps {
+//   onRecoverPassword: () => void;
+// }
 
 const formItemLayout = {
   labelCol: { span: 24 },
@@ -25,7 +26,8 @@ const connectWalletSchema = yup.object({
   password: yup.string().required()
 });
 
-const WalletLogin: React.FC<TProps> = ({ onRecoverPassword }) => {
+const WalletLogin: React.FC = () => {
+  const navigate = useNavigate();
   const onSubmit = async (values: TFormProps) => {
     try {
       const { password, stayLoggedIn } = values;
@@ -79,7 +81,7 @@ const WalletLogin: React.FC<TProps> = ({ onRecoverPassword }) => {
         </div>
         <div
           className="text-grey-100 text-base font-bold cursor-pointer"
-          onClick={onRecoverPassword}>
+          onClick={() => navigate('/getStart/restoreWallet')}>
           Recover your master password
         </div>
       </div>

@@ -80,6 +80,7 @@ const CreateWallet: React.FC = () => {
 
   return (
     <Formik
+      name="create-wallet-form"
       initialValues={initialValues}
       validationSchema={CreateWalletSchema}
       onSubmit={handleCreateAccount}>

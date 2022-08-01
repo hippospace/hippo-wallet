@@ -6,6 +6,7 @@ import styles from './Button.module.scss';
 
 type TProps = {
   className?: string;
+  id?: string;
   children?: any;
   disabled?: boolean;
   isLoading?: boolean;
