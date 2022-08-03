@@ -44,7 +44,6 @@ async function getExtensionUnlockedMnemonic() {
   }
 
   return new Promise((resolve: (value: string) => void) => {
-    console.log('sendin g chrome message');
     chrome.runtime.sendMessage(
       {
         channel: 'hippo_extension_mnemonic_channel',
@@ -62,6 +61,15 @@ const EMPTY_MNEMONIC = {
   derivationPath: null
 };
 
+export const loadingStoredData = async () => {
+  return JSON.parse(
+    (await getExtensionUnlockedMnemonic()) ||
+      sessionStorage.getItem(UNLOCKED_CREDENTIAL) ||
+      localStorage.getItem(UNLOCKED_CREDENTIAL) ||
+      'null'
+  );
+};
+
 let unlockedMnemonicAndSeed = (async () => {
   const unlockedExpiration = localStorage.getItem('unlockedExpiration');
   // Left here to clean up stored mnemonics from previous method
@@ -69,12 +77,7 @@ let unlockedMnemonicAndSeed = (async () => {
     localStorage.removeItem(UNLOCKED_CREDENTIAL);
     localStorage.removeItem('unlockedExpiration');
   }
-  const stored = JSON.parse(
-    (await getExtensionUnlockedMnemonic()) ||
-      sessionStorage.getItem(UNLOCKED_CREDENTIAL) ||
-      localStorage.getItem(UNLOCKED_CREDENTIAL) ||
-      'null'
-  );
+  const stored = await loadingStoredData();
   if (stored === null) {
     return EMPTY_MNEMONIC;
   }
@@ -179,7 +182,6 @@ export const storeMnemonicAndSeed = async (
 
 export function useHasLockedMnemonicAndSeed() {
   const { mnemonic: unlockedMnemonic, loading } = useUnlockedMnemonicAndSeed();
-
   return [!unlockedMnemonic.seed && !!localStorage.getItem(LOCKED_CREDENTIAL), loading];
 }
 

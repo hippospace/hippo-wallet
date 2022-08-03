@@ -108,9 +108,10 @@ const HippoClientProvider: FC<TProviderProps> = ({ children }) => {
       if (!activeWallet || !activeWallet.aptosAccount) throw new Error('Please login first');
       if (symbol === 'APTOS') {
         let result = await faucetClient.fundAccount(activeWallet.aptosAccount.address(), 100000);
-        await hippoWallet?.refreshStores();
-        setRefresh(true);
-        console.log(result);
+        if (result) {
+          await hippoWallet?.refreshStores();
+          setRefresh(true);
+        }
       } else {
         const uiAmtUsed = symbol === 'BTC' ? 0.01 : 10;
         const payload = await hippoWallet?.makeFaucetMintToPayload(uiAmtUsed, symbol);

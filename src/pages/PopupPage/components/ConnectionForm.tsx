@@ -66,11 +66,16 @@ const ConnectionForm: React.FC<TProps> = ({ origin, onApprove, onReject }) => {
           {renderConnectionDetail}
         </div>
         <div className="flex w-full justify-between gap-10">
-          <Button variant="outlined" className="flex-grow font-bold" onClick={handleOnCancel}>
+          <Button
+            id="cancel-btn"
+            variant="outlined"
+            className="flex-grow font-bold"
+            onClick={handleOnCancel}>
             <h6 className="text-inherit">Cancel</h6>
           </Button>
           <Button
             type="submit"
+            id="confirm-btn"
             className="flex-grow font-bold"
             onClick={handleOnClick}
             // isLoading={loading}

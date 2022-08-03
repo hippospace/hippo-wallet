@@ -1,9 +1,6 @@
 import { Drawer, Menu, MenuProps, Spin, Tabs } from 'components/Antd';
 import { useState } from 'react';
 import cx from 'classnames';
-import CoinList from './CoinList';
-import Faucet from './Faucet';
-import Settings from './Settings';
 import WalletOverview from './WalletOverview';
 import styles from './ConnectedScreens.module.scss';
 import { CloseIcon, CoinListIcon, FaucetIcon, SettingIcon, SwapTabIcon } from 'resources/icons';
@@ -14,7 +11,7 @@ import ImportWallet from './ImportWallet';
 import useAptosWallet from 'hooks/useAptosWallet';
 import useHippoClient from 'hooks/useHippoClient';
 import { LoadingOutlined } from '@ant-design/icons';
-import Swap from './Swap';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 const items: MenuProps['items'] = [
   {
@@ -36,11 +33,13 @@ const items: MenuProps['items'] = [
 ];
 
 const ConnectedScreens: React.FC = () => {
-  const [current, setCurrent] = useState('coinList');
+  const location = useLocation();
   const [visible, setVisible] = useState(false);
   const [addNew, setAddNew] = useState(false);
   const { activeWallet, deleteAccount } = useAptosWallet();
   const { isLoading } = useHippoClient();
+  const navigate = useNavigate();
+  const activePath = location.pathname.split('/')[1];
 
   const showDrawer = () => {
     setVisible(true);
@@ -51,7 +50,7 @@ const ConnectedScreens: React.FC = () => {
   };
 
   const onClick: MenuProps['onClick'] = (e) => {
-    setCurrent(e.key);
+    navigate(e.key);
   };
 
   const getModalContent = () => {
@@ -79,18 +78,7 @@ const ConnectedScreens: React.FC = () => {
         </div>
       );
     }
-    switch (current) {
-      case 'coinList':
-        return <CoinList />;
-      case 'swap':
-        return <Swap />;
-      case 'faucet':
-        return <Faucet />;
-      case 'settings':
-        return <Settings />;
-      default:
-        return <CoinList />;
-    }
+    return <Outlet />;
   };
 
   return (
@@ -108,7 +96,7 @@ const ConnectedScreens: React.FC = () => {
           overflowedIndicator={null}
           className={styles.menu}
           onClick={onClick}
-          selectedKeys={[current]}
+          selectedKeys={[activePath]}
           items={items}
         />
       </div>

@@ -72,6 +72,7 @@ const CreatePassword: React.FC = () => {
             />
           </Form.Item>
           <CheckboxInput
+            id="agreement"
             checked={values.agree}
             onChange={(e) => setFieldValue('agree', e.target.checked)}>
             <div className="text-grey-100">
@@ -83,6 +84,7 @@ const CreatePassword: React.FC = () => {
       </div>
       <Button
         isLoading={isSubmitting || loading}
+        id="create-btn"
         onClick={() => {
           setLoading(true);
           submitForm();

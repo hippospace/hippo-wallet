@@ -64,7 +64,6 @@ const getAccountAddress = (sender) => {
 };
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-  console.log('runtime on message>>', message);
   if (message.channel === 'hippo_extension_mnemonic_channel') {
     // Get mnemonic from extension storage for unlock account
     if (message.method === 'set') {

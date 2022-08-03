@@ -19,7 +19,8 @@
       background: transparent;
       svg,
       path {
-        @apply fill-primePurple-100;
+        fill: #f1effe !important;
+        // @apply fill-primePurple-100;
       }
       a {
         @apply text-grey-100;

@@ -4,9 +4,9 @@ import TextInput from 'components/TextInput';
 import { useFormik } from 'formik';
 import LogoIcon from 'components/LogoIcon';
 import * as yup from 'yup';
-import { loadMnemonicAndSeed } from 'utils/wallet-seed';
+import { loadMnemonicAndSeed, useHasLockedMnemonicAndSeed } from 'utils/wallet-seed';
 import { useNavigate } from 'react-router-dom';
-// import CheckboxInput from 'components/CheckboxInput';
+import { useEffect } from 'react';
 
 interface TFormProps {
   password: string;
@@ -27,7 +27,15 @@ const connectWalletSchema = yup.object({
 });
 
 const WalletLogin: React.FC = () => {
+  const [hasLockedMnemonicAndSeed] = useHasLockedMnemonicAndSeed();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!hasLockedMnemonicAndSeed) {
+      navigate('/getStart');
+    }
+  }, [hasLockedMnemonicAndSeed, navigate]);
+
   const onSubmit = async (values: TFormProps) => {
     try {
       const { password, stayLoggedIn } = values;

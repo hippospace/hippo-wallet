@@ -1,39 +1,44 @@
 import { Drawer } from 'components/Antd';
 import Button from 'components/Button';
 import useAptosWallet from 'hooks/useAptosWallet';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { CaretRightIcon, CloseIcon } from 'resources/icons';
 import styles from './Settings.module.scss';
 import ChangePassword from './ChangePassword';
 import WalletDetail from './WalletDetail';
-import usePage from 'hooks/usePage';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const Settings: React.FC = () => {
   const { disconnect } = useAptosWallet();
-  const [screen, setScreen] = useState('');
-  const [, setPage] = usePage();
+  const navigate = useNavigate();
+  const params = useParams();
+  const [screen, setScreen] = useState(params.action);
+
+  useEffect(() => {
+    setScreen(params.action);
+  }, [params.action]);
 
   const settingMenu = useMemo(() => {
     return [
       {
         label: 'Manage Wallet',
         helpText: 'Rename, Private Key',
-        onClick: () => setScreen('manageWallet')
+        onClick: () => navigate('manageWallet')
       },
       {
         label: 'Change Password',
         helpText: 'Update your master password',
-        onClick: () => setScreen('changePassword')
+        onClick: () => navigate('changePassword')
       },
       {
         label: 'Auto-Lock Timer',
         helpText: 'Change your auto-lock time duration',
-        onClick: () => setScreen('lockTimer')
+        onClick: () => navigate('lockTimer')
       }
     ];
-  }, []);
+  }, [navigate]);
 
-  const onBackToSetting = () => setScreen('');
+  const onBackToSetting = useCallback(() => navigate(-1), [navigate]);
 
   const renderContent = useMemo(() => {
     switch (screen) {
@@ -45,12 +50,12 @@ const Settings: React.FC = () => {
       default:
         return null;
     }
-  }, [screen]);
+  }, [screen, onBackToSetting]);
 
   const onLogout = useCallback(() => {
-    setPage('login');
+    navigate('/walletLogin');
     disconnect();
-  }, [disconnect, setPage]);
+  }, [disconnect, navigate]);
 
   return (
     <div className="flex flex-col overflow-y-scroll no-scrollbar pt-6">

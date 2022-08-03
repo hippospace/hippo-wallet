@@ -38,6 +38,7 @@ const WalletName: React.FC<TProps> = ({ goForward }) => {
       </Form.Item>
       <Button
         className="w-full absolute font-bold bottom-4"
+        id="continue-btn"
         disabled={!values.walletName || !!errors.walletName}
         onClick={goForward}>
         <h6 className="text-inherit">Continue</h6>

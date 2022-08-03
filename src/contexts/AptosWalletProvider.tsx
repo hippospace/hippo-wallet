@@ -175,17 +175,19 @@ const AptosWalletProvider: FC<TProviderProps> = ({ children }) => {
         // create new account when there is no other accounts imported
         const account = createNewAccount();
         console.log('create new account');
-        await faucetClient.fundAccount(account.address(), 10000);
-        const newWalletAccount = walletList[0];
-        const privateKeyObj = account?.toPrivateKeyObject();
-        await addAccount(undefined, account);
-        const selectedWallet = {
-          ...newWalletAccount,
-          address: privateKeyObj?.address,
-          aptosAccount: account
-        };
-        setActiveWallet(selectedWallet);
-        setWalletNameList(walletList);
+        const result = await faucetClient.fundAccount(account.address(), 10000);
+        if (result) {
+          const newWalletAccount = walletList[0];
+          const privateKeyObj = account?.toPrivateKeyObject();
+          await addAccount(undefined, account);
+          const selectedWallet = {
+            ...newWalletAccount,
+            address: privateKeyObj?.address,
+            aptosAccount: account
+          };
+          setActiveWallet(selectedWallet);
+          setWalletNameList(walletList);
+        }
       } else if (currentWallet?.toString() && !activeWallet?.address && aptosWalletAccounts) {
         // login existing account
         // console.log('login existing account', currentWallet, aptosWalletAccounts);

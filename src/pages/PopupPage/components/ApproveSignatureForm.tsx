@@ -209,10 +209,15 @@ const ApproveSignatureForm: React.FC<TProps> = ({ txPayload, onApprove, onReject
           {renderTransactionDetail}
         </div>
         <div className="flex w-full justify-between gap-10">
-          <Button variant="outlined" className="flex-grow font-bold" onClick={handleOnCancel}>
+          <Button
+            id="cancel-btn"
+            variant="outlined"
+            className="flex-grow font-bold"
+            onClick={handleOnCancel}>
             <h6 className="text-inherit">Cancel</h6>
           </Button>
           <Button
+            id="confirm-btn"
             type="submit"
             className="flex-grow font-bold"
             onClick={handleOnClick}
